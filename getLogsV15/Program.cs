@@ -304,19 +304,23 @@ namespace getLogsV15
                 Decimal s1 = f.Length / 1024 / 1024;
                 zipFileList.Add(dir); // Add each 7zip file to the list zipFileList
                 fileList = Path.GetFileNameWithoutExtension(dir);
-                string stageFile7z = localStagePath + fileList + numlog22++;
-                    if (File.Exists(stageFile7z))
-                    {
-                        LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
-                    }
-                    else
-                    { 
+                string stageFile7z = localStagePath + "\\" + fileList + numlog22++ +".txt";
+                //LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
+
+                //if (File.Exists(stageFile7z))
+                //{
+                //    LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
+                //    Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                //}
+                //    else
+                //    {
+                        LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
                         pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
                         LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
                         Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
                         x.WaitForExit();
                         Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-                    }
+                    //}
 
                 using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
                 {
