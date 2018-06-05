@@ -126,7 +126,6 @@ namespace getLogsV15
                     fs.Write(info, 0, info.Length);
                 }
 
-
             }
 
 
@@ -311,11 +310,11 @@ namespace getLogsV15
                         Match m = g.Match(line);
                         if (m.Success)
                         {
-                            if (line.Contains("celogs") == true)
+                            if (line.Contains("celogs") == true) //This is used to skip regex search for files that contain celogs in the path.
                             {
                                 //Console.WriteLine("not here");
                             }
-                            //else if (line.Contains("Type = zip") == true)
+                            //else if (line.Contains("Type = zip") == true) // Logic to collect .zip files also. Currently broken.
                             //{
                             //numfile3 = numfile3 -1;
                             //Console.WriteLine("\tNo Machine Info found");
@@ -463,6 +462,7 @@ namespace getLogsV15
                     pro.Arguments = string.Format("{4}\"{0}\" | \"{2}\" {3}\"{1}\"", currentFile, parentFilePath + "\\" + result + "\\", zPath, sub7zipArg, top7zipArg);
                     Process z = Process.Start(pro);
                     z.WaitForExit();
+                    File.Delete(currentFile);
                     LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
 
                     //7z x -so nc2plcvma01_logs.tar.gz | 7z x -si -ttar -onc2plcvma01
@@ -487,11 +487,7 @@ namespace getLogsV15
                         z.WaitForExit();
                         LogMessageToFile("DELETE: filename to delete: " + file);
                         File.Delete(file);
-
                     }
-
-
-
                 }
 
                 LogMessageToFile("INFO: Opening folder " + parentFilePath);
@@ -551,14 +547,12 @@ namespace getLogsV15
 
 
 //##### Project list:
+//Add support for .zip files.
 //FIX multiple access to log file.
-//Add feature to populate inputfile.ini values.
 
 
 
-
-
-//Problems
+//##### Problems
 
 
 //1. Cab file is incomplete so it fails to find the path to extract to
