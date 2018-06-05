@@ -166,6 +166,7 @@ namespace getLogsV15
             string parentFilePath;
             string excludeCSDB = "";
             string recheckShare = "y";
+            string recheckFolder = "y";
 
             int numlog = 0; //Used to display the number of logs in the folder.
             int numlog2 = 0; //Used to display the number of logs in the folder.
@@ -220,17 +221,24 @@ namespace getLogsV15
                 //Console.Read();
                 //return;
             }
-
+            recheckFullLogPath:
             if (Directory.Exists(fullLogPath))
             {
                 LogMessageToFile("INFO: Directory.Exists for fullLogPath" + fullLogPath + " is valid: Continue");
             }
             else
             {
-                Console.WriteLine(Directory.Exists(fullLogPath) ? "Customer commcell folder exits...." : "\n\n\n####### The customers commcell folder does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", fullLogPath);
+                Console.WriteLine("Customer folder does not yet exist. Would you like to re-check for the folder [Y/N]");
+                recheckFolder = Console.ReadLine();
+                if (recheckFolder == "y")
+                {
+                    LogMessageToFile("re-check log files selected");
+                    goto recheckFullLogPath;
+                }
+                //Console.WriteLine(Directory.Exists(fullLogPath) ? "Customer commcell folder exits...." : "\n\n\n####### The customers commcell folder does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", fullLogPath);
                 LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-                Console.Read();
+                //Console.Read();
                 return;
             }
             recheck:
@@ -463,6 +471,7 @@ namespace getLogsV15
                     Process z = Process.Start(pro);
                     z.WaitForExit();
                     File.Delete(currentFile);
+                    LogMessageToFile("DELETE " + currentFile);
                     LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
 
                     //7z x -so nc2plcvma01_logs.tar.gz | 7z x -si -ttar -onc2plcvma01
