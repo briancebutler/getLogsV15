@@ -228,7 +228,7 @@ namespace getLogsV15
             }
             else
             {
-                Console.WriteLine("Customer folder does not yet exist. Would you like to re-check for the folder [Y/N]");
+                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]",fullLogPath);
                 recheckFolder = Console.ReadLine();
                 if (recheckFolder == "y")
                 {
@@ -353,8 +353,20 @@ namespace getLogsV15
                 Console.WriteLine("Choose File [#] [Enter] = 0, [97] = Recheck, [98] = Local dir, [99] = celogs dir:");
                 //Console.WriteLine(numlog);
                 numlog = Convert.ToInt32(Console.ReadLine());
-                //Console.WriteLine(numlog);
-                if (numlog == 99)
+
+
+            }
+            catch (Exception e)
+            {
+                numlog = 0;
+                //Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+
+            finally { }
+
+
+            //Console.WriteLine(numlog);
+            if (numlog == 99)
                 {
                     Console.WriteLine("Opening ..." + fullLogPath);
                     Process.Start("explorer", fullLogPath);
@@ -381,13 +393,7 @@ namespace getLogsV15
                 LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
                 File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The process failed: {0}", e.ToString());
-            }
 
-            finally { }
 
             try
             {
@@ -553,11 +559,13 @@ namespace getLogsV15
 //05/22/2018 - Added the creation of local staging path if it does not exist.
 //05/31/2018 - Added re-check to log share using goto recheck;
 //06/05/2018 - Added tar.gz support.
+//06/05/2018 - Corrected default numlog =0 using try catch.
 
 
 //##### Project list:
 //Add support for .zip files.
 //FIX multiple access to log file.
+//Check if C:\Users\bbutler\AppData\Local\cvgetlog\F473E files exist already if they do do not recreate them.
 
 
 
