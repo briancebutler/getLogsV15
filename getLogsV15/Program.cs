@@ -547,7 +547,7 @@ namespace getLogsV15
 //05/22/2018 - Added creation of inputfile.ini with default values.
 //05/22/2018 - Added the creation of local staging path if it does not exist.
 //05/31/2018 - Added re-check to log share using goto recheck;
-
+//06/05/2018 - Added tar.gz support.
 
 
 //##### Project list:
