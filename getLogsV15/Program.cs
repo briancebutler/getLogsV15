@@ -51,7 +51,7 @@ namespace getLogsV15
         static void Main(string[] args)
         {
             Console.SetWindowSize(85, 72);
-
+            Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata");
             string cvgetlog = path + "\\cvgetlog";
 
@@ -288,7 +288,7 @@ namespace getLogsV15
             }
 
 
-            Retry:
+            //Retry:
 
             Regex g = new Regex(@"\w+\.7z|.gz|.dmp|.zip"); //search 7z extracted cabs to find files inside.
 
@@ -307,20 +307,20 @@ namespace getLogsV15
                 string stageFile7z = localStagePath + "\\" + fileList + numlog22++ +".txt";
                 //LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
 
-                //if (File.Exists(stageFile7z))
-                //{
-                //    LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
-                //    Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-                //}
-                //    else
-                //    {
-                        LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
+                if (File.Exists(stageFile7z))
+                {
+                    LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
+                    Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                }
+                else
+                {
+                    LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
                         pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
                         LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
                         Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
                         x.WaitForExit();
                         Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-                    //}
+                }
 
                 using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
                 {
