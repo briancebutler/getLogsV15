@@ -258,26 +258,48 @@ namespace getLogsV15
             //    //return;
             //}
 
+
             recheckFullLogPath:
-            if (Directory.Exists(fullLogPath))
+
+            if (!Directory.Exists(fullLogPath))
             {
-                LogMessageToFile("INFO: Directory.Exists for fullLogPath" + fullLogPath + " is valid: Continue");
-            }
-            else
-            {
-                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]",fullLogPath);
+                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]", fullLogPath);
                 recheckFolder = Console.ReadLine();
                 if (recheckFolder == "y")
                 {
                     LogMessageToFile("re-check log files selected");
                     goto recheckFullLogPath;
                 }
-                //Console.WriteLine(Directory.Exists(fullLogPath) ? "Customer commcell folder exits...." : "\n\n\n####### The customers commcell folder does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", fullLogPath);
                 LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-                //Console.Read();
                 return;
             }
+
+
+
+            //    if (Directory.Exists(fullLogPath))
+            //{
+            //    LogMessageToFile("INFO: Directory.Exists for fullLogPath" + fullLogPath + " is valid: Continue");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]",fullLogPath);
+            //    recheckFolder = Console.ReadLine();
+            //    if (recheckFolder == "y")
+            //    {
+            //        LogMessageToFile("re-check log files selected");
+            //        goto recheckFullLogPath;
+            //    }
+            //    //Console.WriteLine(Directory.Exists(fullLogPath) ? "Customer commcell folder exits...." : "\n\n\n####### The customers commcell folder does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", fullLogPath);
+            //    LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
+            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+            //    //Console.Read();
+            //    return;
+            //}
+
+
+
+
             recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
             {
