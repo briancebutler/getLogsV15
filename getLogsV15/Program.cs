@@ -234,19 +234,30 @@ namespace getLogsV15
             //    return;
             //}
 
-            if (Directory.Exists(stagingDir))
-            {
-                LogMessageToFile("INFO: Directory.Exists for local stagingDir: " + stagingDir + "is valid: Continue");
-            }
-            else
+
+            if(!Directory.Exists(stagingDir))
             {
                 Console.WriteLine("######################################################################\nCreating the following directory to store your log files\nIf you wish to change this path please update the inputfile.ini file LocalStagingDir\nValue: " + stagingDir + "\n######################################################################\n\n");
                 DirectoryInfo di = Directory.CreateDirectory(stagingDir);
                 LogMessageToFile("CREATED: Directory.Exists failed for stagingDir: Creating new: " + stagingDir);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-                //Console.Read();
-                //return;
             }
+
+
+            //if (Directory.Exists(stagingDir))
+            //{
+            //    LogMessageToFile("INFO: Directory.Exists for local stagingDir: " + stagingDir + "is valid: Continue");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("######################################################################\nCreating the following directory to store your log files\nIf you wish to change this path please update the inputfile.ini file LocalStagingDir\nValue: " + stagingDir + "\n######################################################################\n\n");
+            //    DirectoryInfo di = Directory.CreateDirectory(stagingDir);
+            //    LogMessageToFile("CREATED: Directory.Exists failed for stagingDir: Creating new: " + stagingDir);
+            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+            //    //Console.Read();
+            //    //return;
+            //}
+
             recheckFullLogPath:
             if (Directory.Exists(fullLogPath))
             {
