@@ -151,7 +151,7 @@ namespace getLogsV15
             LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
             string extractTo = stagingDir + CCID + ticketNumber;
             LogMessageToFile("INFO: extractTo: " + extractTo);
-            List<string> zipFileList = new List<string>(); //List for file selection
+            List<string> zipFileList = new List<string>(); //List for file selecti;on
             List<string> zipFileList2 = new List<string>(); //List for file selection
             List<string> zipFileList3 = new List<string>(); //List for tar file selection
             List<string> zipFileList4 = new List<string>(); //List for tar file selection
@@ -187,18 +187,28 @@ namespace getLogsV15
             }
 
 
-            if (File.Exists(zPath))
+            if (!File.Exists(zPath))
             {
-                LogMessageToFile("INFO: File.Exists for 7zip: " + zPath + "is valid: Continue");
-            }
-            else
-            {
-                Console.WriteLine(File.Exists(zPath) ? "7zip exits...." : "\n\n\n####### 7zip does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", zPath);
+                Console.WriteLine("\n\n\n####### 7zip does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", zPath);
                 LogMessageToFile("ERROR: File.Exists failed for zPath" + zPath);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                 Console.Read();
                 return;
             }
+
+
+            //if (File.Exists(zPath))
+            //{
+            //    LogMessageToFile("INFO: File.Exists for 7zip: " + zPath + "is valid: Continue");
+            //}
+            //else
+            //{
+            //    Console.WriteLine(File.Exists(zPath) ? "7zip exits...." : "\n\n\n####### 7zip does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", zPath);
+            //    LogMessageToFile("ERROR: File.Exists failed for zPath" + zPath);
+            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+            //    Console.Read();
+            //    return;
+            //}
 
             if (Directory.Exists(ceLogs))
             {
