@@ -155,6 +155,7 @@ namespace getLogsV15
             List<string> zipFileList2 = new List<string>(); //List for file selection
             List<string> zipFileList3 = new List<string>(); //List for tar file selection
             List<string> zipFileList4 = new List<string>(); //List for tar file selection
+            List<string> dirFolderList4 = new List<string>(); //List for tar file selection
             //List<string> FolderList = new List<string>(); //List for tar file selection
             string cmdPath = "C:\\Windows\\System32\\cmd.exe";
             LogMessageToFile("INFO: cmdPath: " + cmdPath);
@@ -172,6 +173,9 @@ namespace getLogsV15
             int numlog2 = 0; //Used to display the number of logs in the folder.
             int numlog22 = 0; //Used to display the number of logs in the folder.
             int numfile3 = 0; //Used when listing zip file contents to increment counter.
+            int numFile4 = 0;
+            int numFolder4 = 0;
+           
 
 
             var fileExt = new[] { ".7z", ".gz", ".tar" };
@@ -507,15 +511,38 @@ namespace getLogsV15
                     foreach (string file in Directory.GetFileSystemEntries(dir, "*.7z"))
                     {
 
+                        zipFileList4.Add(file);
+                        dirFolderList4.Add(dir);
+                        //Console.WriteLine(zipFileList4[numFile4++]);
+                        //Console.WriteLine(dirFolderList4[numFolder4++]);
+                        LogMessageToFile("dirFolderList4 " + dirFolderList4[numFolder4++]);
+                        LogMessageToFile("zipFileList4 " + zipFileList4[numFile4++]);
+
                         //LogMessageToFile("INFO: SubServerZipFile: " + file);
-                        pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", file, dir + "\\*");    // extracts the 7z file found in the foreach above.
-                        Process z = Process.Start(pro);
-                        LogMessageToFile("INFO: Extracting child zips: 7z.exe " + pro.Arguments);
-                        z.WaitForExit();
-                        LogMessageToFile("DELETE: filename to delete: " + file);
-                        File.Delete(file);
+
+
+                        //pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", file, dir + "\\*");    // extracts the 7z file found in the foreach above.
+                        //Process z = Process.Start(pro);
+                        //LogMessageToFile("INFO: Extracting child zips: 7z.exe " + pro.Arguments);
+                        //z.WaitForExit();
+                        //LogMessageToFile("DELETE: filename to delete: " + file);
+                        //File.Delete(file);
                     }
                 }
+
+
+                Parallel.ForEach(zipFileList4, (currentFile) =>
+                {
+
+                    pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, dirFolderList4[numFolder4++] + "\\*");    // extracts the 7z file found in the foreach above.
+                    Process z = Process.Start(pro);
+                    LogMessageToFile("INFO: Extracting child zips: 7z.exe " + pro.Arguments);
+                    z.WaitForExit();
+                    LogMessageToFile("DELETE: filename to delete: " + zipFileList4[numFile4]);
+                    File.Delete(zipFileList4[numFile4++]);
+
+
+                });
 
                 LogMessageToFile("INFO: Opening folder " + parentFilePath);
                 Process.Start("explorer", parentFilePath);
@@ -572,13 +599,16 @@ namespace getLogsV15
 //05/31/2018 - Added re-check to log share using goto recheck;
 //06/05/2018 - Added tar.gz support.
 //06/05/2018 - Corrected default numlog =0 using try catch.
+//06/05/2018 - //Check if C:\Users\bbutler\AppData\Local\cvgetlog\F473E files exist already if they do do not recreate them.
+
 
 
 //##### Project list:
 //Add support for .zip files.
 //FIX multiple access to log file.
-//Check if C:\Users\bbutler\AppData\Local\cvgetlog\F473E files exist already if they do do not recreate them.
-
+//parallel unzip sub zips.
+//GEt count in "zipFileList" list and limit to the last 10 when displaying the list of log files. 
+//Get count in list
 
 
 //##### Problems
