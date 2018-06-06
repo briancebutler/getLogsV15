@@ -210,18 +210,29 @@ namespace getLogsV15
             //    return;
             //}
 
-            if (Directory.Exists(ceLogs))
+
+            if (!Directory.Exists(ceLogs))
             {
-                LogMessageToFile("INFO: Directory.Exists for celogs: " + ceLogs + " is valid: Continue");
-            }
-            else
-            {
-                Console.WriteLine(Directory.Exists(ceLogs) ? "Customer log path exits...." : "\n\n\n####### Customer log path does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", ceLogs);
+                Console.WriteLine("\n\n\n####### Customer log path does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", ceLogs);
                 LogMessageToFile("ERROR: Directory.Exists failed for ceLogs: " + ceLogs);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                 Console.Read();
                 return;
             }
+
+
+            //if (Directory.Exists(ceLogs))
+            //{
+            //    LogMessageToFile("INFO: Directory.Exists for celogs: " + ceLogs + " is valid: Continue");
+            //}
+            //else
+            //{
+            //    Console.WriteLine(Directory.Exists(ceLogs) ? "Customer log path exits...." : "\n\n\n####### Customer log path does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", ceLogs);
+            //    LogMessageToFile("ERROR: Directory.Exists failed for ceLogs: " + ceLogs);
+            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+            //    Console.Read();
+            //    return;
+            //}
 
             if (Directory.Exists(stagingDir))
             {
