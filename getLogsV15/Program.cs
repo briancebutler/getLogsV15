@@ -325,25 +325,39 @@ namespace getLogsV15
                 LogMessageToFile("INFO: Uploads found in - " + fullLogPath + " Continuing");
             }
 
-            if (Directory.Exists(localStagePath))
-            {
-                LogMessageToFile("INFO: localStagePath already exists" + localStagePath);
-            }
-            else
+            if (!Directory.Exists(localStagePath))
             {
                 DirectoryInfo di = Directory.CreateDirectory(localStagePath);
                 LogMessageToFile("INFO: localStagePath was created " + localStagePath);
             }
 
-            if (Directory.Exists(extractTo))
-            {
-                LogMessageToFile("INFO: extracTo already exists" + extractTo);
-            }
-            else
+            //if (Directory.Exists(localStagePath))
+            //{
+            //    LogMessageToFile("INFO: localStagePath already exists" + localStagePath);
+            //}
+            //else
+            //{
+            //    DirectoryInfo di = Directory.CreateDirectory(localStagePath);
+            //    LogMessageToFile("INFO: localStagePath was created " + localStagePath);
+            //}
+
+
+            if (!Directory.Exists(extractTo))
             {
                 DirectoryInfo di = Directory.CreateDirectory(extractTo);
                 LogMessageToFile("INFO: extractTo was created " + extractTo);
             }
+
+
+            //    if (Directory.Exists(extractTo))
+            //{
+            //    LogMessageToFile("INFO: extracTo already exists" + extractTo);
+            //}
+            //else
+            //{
+            //    DirectoryInfo di = Directory.CreateDirectory(extractTo);
+            //    LogMessageToFile("INFO: extractTo was created " + extractTo);
+            //}
 
 
             //Retry:
