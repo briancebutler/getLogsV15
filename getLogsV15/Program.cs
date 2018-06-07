@@ -20,18 +20,11 @@ namespace getLogsV15
             return path;
         }
 
-
-        //private const int NumberOfRetries = 5;
-        //private const int DelayOnRetry = 1000;
-
         public static void LogMessageToFile(string msg)
 
         {
-            //System.IO.StreamWriter sw = System.IO.File.AppendText(GetTempPath() + "cvgetlog\\CVGetLogs.txt");
             System.IO.StreamWriter sw = new StreamWriter(GetTempPath() + "cvgetlog\\CVGetLogs.txt", true);
 
-            //for (int i = 1; i <= NumberOfRetries; ++i)
-            //{
             try
             {
                 string logLine = System.String.Format("{0:G}: {1}.", System.DateTime.Now, msg);
@@ -39,13 +32,9 @@ namespace getLogsV15
             }
             finally
             {
-
                 sw.Close();
             }
-            //}
         }
-
-
 
 
         static void Main(string[] args)
@@ -103,7 +92,6 @@ namespace getLogsV15
                 Console.WriteLine("\n");
             }
 
-            //Need to make this to the same directory as the executable.
             var iniPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\inputfile.ini");
 
             if (File.Exists(iniPath))
@@ -115,13 +103,10 @@ namespace getLogsV15
                 Console.WriteLine("######################################################################\n.\\inputfile.ini does not exist. \nThis file should be in the same directory as getLogs.exe\n\n\nCREATING INPUTFILE.INI with the default values below.\n\nFILE FORMAT:\n7zipPath=c:\\progra~1\\7-Zip\\7z.exe\nceLogPath=\\\\eng\\celogs\\\nlocalStagingDir=C:\\LogFiles\\\nextractDMP=false\n######################################################################\n\n");
                 LogMessageToFile("ERROR: File.Exists failed for iniPath " + iniPath);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-                //Console.Read();
-                //return;
 
                 using (FileStream fs = File.Create(iniPath))
                 {
                     Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false");
-
 
                     fs.Write(info, 0, info.Length);
                 }
@@ -129,9 +114,7 @@ namespace getLogsV15
             }
 
 
-
             LogMessageToFile("####iniPath#### " + iniPath);
-            //var dic = File.ReadAllLines("C:\\LogFiles\\inputfile.ini").Select(l => l.Split(new[] { '=' })).ToDictionary(s => s[0].Trim(), s => s[1].Trim());
             var dic = File.ReadAllLines(iniPath).Select(l => l.Split(new[] { '=' })).ToDictionary(s => s[0].Trim(), s => s[1].Trim());
             string zPath = dic["7zipPath"]; //OLD init - string zPath = "C:\\Program Files\\7-Zip\\7z.exe"; //7zip path.
             LogMessageToFile("INFO_CFG: 7Zip path: " + zPath);
@@ -156,7 +139,6 @@ namespace getLogsV15
             List<string> zipFileList3 = new List<string>(); //List for tar file selection
             List<string> zipFileList4 = new List<string>(); //List for tar file selection
             List<string> dirFolderList4 = new List<string>(); //List for tar file selection
-            //List<string> FolderList = new List<string>(); //List for tar file selection
             string cmdPath = "C:\\Windows\\System32\\cmd.exe";
             LogMessageToFile("INFO: cmdPath: " + cmdPath);
             string localStagePath = GetTempPath() + "cvgetlog\\" + CCID;
@@ -196,21 +178,6 @@ namespace getLogsV15
                 return;
             }
 
-
-            //if (File.Exists(zPath))
-            //{
-            //    LogMessageToFile("INFO: File.Exists for 7zip: " + zPath + "is valid: Continue");
-            //}
-            //else
-            //{
-            //    Console.WriteLine(File.Exists(zPath) ? "7zip exits...." : "\n\n\n####### 7zip does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", zPath);
-            //    LogMessageToFile("ERROR: File.Exists failed for zPath" + zPath);
-            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-            //    Console.Read();
-            //    return;
-            //}
-
-
             if (!Directory.Exists(ceLogs))
             {
                 Console.WriteLine("\n\n\n####### Customer log path does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", ceLogs);
@@ -220,21 +187,6 @@ namespace getLogsV15
                 return;
             }
 
-
-            //if (Directory.Exists(ceLogs))
-            //{
-            //    LogMessageToFile("INFO: Directory.Exists for celogs: " + ceLogs + " is valid: Continue");
-            //}
-            //else
-            //{
-            //    Console.WriteLine(Directory.Exists(ceLogs) ? "Customer log path exits...." : "\n\n\n####### Customer log path does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", ceLogs);
-            //    LogMessageToFile("ERROR: Directory.Exists failed for ceLogs: " + ceLogs);
-            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-            //    Console.Read();
-            //    return;
-            //}
-
-
             if(!Directory.Exists(stagingDir))
             {
                 Console.WriteLine("######################################################################\nCreating the following directory to store your log files\nIf you wish to change this path please update the inputfile.ini file LocalStagingDir\nValue: " + stagingDir + "\n######################################################################\n\n");
@@ -242,22 +194,6 @@ namespace getLogsV15
                 LogMessageToFile("CREATED: Directory.Exists failed for stagingDir: Creating new: " + stagingDir);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
             }
-
-
-            //if (Directory.Exists(stagingDir))
-            //{
-            //    LogMessageToFile("INFO: Directory.Exists for local stagingDir: " + stagingDir + "is valid: Continue");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("######################################################################\nCreating the following directory to store your log files\nIf you wish to change this path please update the inputfile.ini file LocalStagingDir\nValue: " + stagingDir + "\n######################################################################\n\n");
-            //    DirectoryInfo di = Directory.CreateDirectory(stagingDir);
-            //    LogMessageToFile("CREATED: Directory.Exists failed for stagingDir: Creating new: " + stagingDir);
-            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-            //    //Console.Read();
-            //    //return;
-            //}
-
 
             recheckFullLogPath:
 
@@ -274,30 +210,6 @@ namespace getLogsV15
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                 return;
             }
-
-
-
-            //    if (Directory.Exists(fullLogPath))
-            //{
-            //    LogMessageToFile("INFO: Directory.Exists for fullLogPath" + fullLogPath + " is valid: Continue");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]",fullLogPath);
-            //    recheckFolder = Console.ReadLine();
-            //    if (recheckFolder == "y")
-            //    {
-            //        LogMessageToFile("re-check log files selected");
-            //        goto recheckFullLogPath;
-            //    }
-            //    //Console.WriteLine(Directory.Exists(fullLogPath) ? "Customer commcell folder exits...." : "\n\n\n####### The customers commcell folder does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", fullLogPath);
-            //    LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
-            //    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-            //    //Console.Read();
-            //    return;
-            //}
-
-
 
 
             recheck:
@@ -331,36 +243,12 @@ namespace getLogsV15
                 LogMessageToFile("INFO: localStagePath was created " + localStagePath);
             }
 
-            //if (Directory.Exists(localStagePath))
-            //{
-            //    LogMessageToFile("INFO: localStagePath already exists" + localStagePath);
-            //}
-            //else
-            //{
-            //    DirectoryInfo di = Directory.CreateDirectory(localStagePath);
-            //    LogMessageToFile("INFO: localStagePath was created " + localStagePath);
-            //}
-
-
             if (!Directory.Exists(extractTo))
             {
                 DirectoryInfo di = Directory.CreateDirectory(extractTo);
                 LogMessageToFile("INFO: extractTo was created " + extractTo);
             }
 
-
-            //    if (Directory.Exists(extractTo))
-            //{
-            //    LogMessageToFile("INFO: extracTo already exists" + extractTo);
-            //}
-            //else
-            //{
-            //    DirectoryInfo di = Directory.CreateDirectory(extractTo);
-            //    LogMessageToFile("INFO: extractTo was created " + extractTo);
-            //}
-
-
-            //Retry:
 
             Regex g = new Regex(@"\w+\.7z|.gz|.dmp|.zip"); //search 7z extracted cabs to find files inside.
 
@@ -377,7 +265,6 @@ namespace getLogsV15
                 zipFileList.Add(dir); // Add each 7zip file to the list zipFileList
                 fileList = Path.GetFileNameWithoutExtension(dir);
                 string stageFile7z = localStagePath + "\\" + fileList + numlog22++ +".txt";
-                //LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
 
                 if (File.Exists(stageFile7z))
                 {
@@ -435,7 +322,6 @@ namespace getLogsV15
             {
                 numlog = 0;
                 Console.WriteLine("Choose File [#] [Enter] = 0, [97] = Recheck, [98] = Local dir, [99] = celogs dir:");
-                //Console.WriteLine(numlog);
                 numlog = Convert.ToInt32(Console.ReadLine());
 
 
@@ -443,13 +329,11 @@ namespace getLogsV15
             catch (Exception e)
             {
                 numlog = 0;
-                //Console.WriteLine("The process failed: {0}", e.ToString());
             }
 
             finally { }
 
 
-            //Console.WriteLine(numlog);
             if (numlog == 99)
                 {
                     Console.WriteLine("Opening ..." + fullLogPath);
@@ -466,7 +350,6 @@ namespace getLogsV15
                 {
                     numlog = 0;
                     goto Retry;
-                    //return;
                 }
 
                 Console.WriteLine("You Selected: " + numlog);
@@ -477,14 +360,8 @@ namespace getLogsV15
                 LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
                 File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
 
-
-
             try
             {
-                //if (Directory.Exists(extractTo)) // Determine whether the directory exists.
-                //{
-
-                //parentZipFile = Path.GetFileNameWithoutExtension(zipFileList[numlog]);
                 parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
                 string extractParentZip;
                 extractParentZip = extractTo + "\\" + parentZipFileExt;
@@ -498,7 +375,6 @@ namespace getLogsV15
                 Process x = Process.Start(pro);
                 LogMessageToFile("INFO: Extracting root zip: 7z.exe " + pro.Arguments);
                 x.WaitForExit();
-
 
                 if (Directory.Exists(parentFilePath))
                 {
