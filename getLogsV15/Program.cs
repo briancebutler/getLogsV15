@@ -141,7 +141,6 @@ namespace getLogsV15
             LogMessageToFile("INFO: cmdPath: " + cmdPath);
             string localStagePath = GetTempPath() + "cvgetlog\\" + CCID;
             string fileList;// = "zipfilename";
-            Console.WriteLine("FTP: " + ftpUrl);
             string parentZipFile;
             string parentZipFileExt;
             string parentFilePath;
