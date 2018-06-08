@@ -51,17 +51,6 @@ namespace getLogsV15
                 LogMessageToFile("INFO: CreateDirectory: " + cvgetlog);
             }
 
-            //    if (Directory.Exists(cvgetlog))
-            //{
-            //    LogMessageToFile("INFO: Directory: " + cvgetlog + " Already Exists");
-
-            //}
-            //else
-            //{
-            //    Directory.CreateDirectory(cvgetlog);
-            //    LogMessageToFile("INFO: CreateDirectory: " + cvgetlog);
-            //}
-
             LogMessageToFile("Info: Console.SetWindowSize(85,72)");
 
             LogMessageToFile("INFO: ################# STARTING CVGETLOGS #################");
