@@ -449,30 +449,15 @@ namespace getLogsV15
 
                 foreach (string dir in dirs)
                 {
-                    //LogMessageToFile("INFO: Working in TopLevelDir: " + dir);
+
                     foreach (string file in Directory.GetFileSystemEntries(dir, "*.7z"))
                     {
 
                         zipFileList4.Add(file);
                         dirFolderList4.Add(dir);
-                        //numFolder4 = numFolder4 + 1;
-                        //numFile4 = numFile4 + 1;
-                        //Console.WriteLine(zipFileList4[numFile4++]);
-                        //Console.WriteLine(dirFolderList4[numFolder4++]);
                         LogMessageToFile("dirFolderList4 " + dirFolderList4[numFolder4++]);
                         LogMessageToFile("zipFileList4 " + zipFileList4[numFile4++]);
-                        //LogMessageToFile("numfile4" + numFile4);
-                        //LogMessageToFile("numfolder4" + numFolder4);
-                        //LogMessageToFile("INFO: SubServerZipFile: " + file);
 
-                        //testcomment
-                        //pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", file, dir + "\\*");    // extracts the 7z file found in the foreach above.
-                        //Process z = Process.Start(pro);
-                        //LogMessageToFile("INFO: Extracting child zips: 7z.exe " + pro.Arguments);
-                        //z.WaitForExit();
-                        //LogMessageToFile("DELETE: filename to delete: " + file);
-                        //File.Delete(file);
-                        //testcomment
                     }
                 }
 
@@ -482,11 +467,9 @@ namespace getLogsV15
 
                     string outputFolder;
                     outputFolder = Path.GetDirectoryName(currentFile);
-                    Console.WriteLine("DIR: " + outputFolder);
-                    Console.WriteLine("FILE: " + currentFile);
                     pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder + "\\*");    // extracts the 7z file found in the foreach above.
                     Process z = Process.Start(pro);
-                    Console.WriteLine("INFO: Extracting child zips: 7z.exe " + pro.Arguments);
+                    Console.WriteLine("Extracting: " + currentFile);
                     z.WaitForExit();
                     File.Delete(currentFile);
 
@@ -499,7 +482,6 @@ namespace getLogsV15
 
                 return;
 
-                //}
             }
 
             catch (Exception e)
