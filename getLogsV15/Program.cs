@@ -40,7 +40,7 @@ namespace getLogsV15
         static void Main(string[] args)
         {
             Console.SetWindowSize(85, 72); //Resize window
-
+            var stopWatch = Stopwatch.StartNew();
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
             string cvgetlog = path + "\\cvgetlog"; //path.combine("localappdata","cvgetlog")
@@ -402,7 +402,7 @@ namespace getLogsV15
                         else if (subfile1.Contains(".gz"))
                         {
 
-                            Console.WriteLine("Still working on extraction for .tar.gz files\n{0}", subfile1);
+                            //Console.WriteLine("Still working on extraction for .tar.gz files\n{0}", subfile1);
                             zipFileList3.Add(subfile1);
                             LogMessageToFile("INFO: zipFileList3 item added to list" + zipFileList3);
 
@@ -518,6 +518,7 @@ namespace getLogsV15
             finally { }
 
             //Console.WriteLine("Last");
+            LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
             LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
             Console.Read();
 
