@@ -103,7 +103,7 @@ namespace getLogsV15
 
                 using (FileStream fs = File.Create(iniPath))
                 {
-                    Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false");
+                    Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false\nftpUrl =ftp://ccust01:NOTTHISPWD@qnftp01.commvault.com/incoming/");
 
                     fs.Write(info, 0, info.Length);
                 }
@@ -121,6 +121,7 @@ namespace getLogsV15
             LogMessageToFile("INFO_CFG: Local Staging directory: " + stagingDir);
             string extractDMP = dic["extractDMP"];
             LogMessageToFile("INFO_CFG: ExtractDMP: " + extractDMP);
+            string ftpUrl = dic["ftpUrl"];
             string ticketNumber = "\\" + cmdArgs[2]; //Not currenlty used other than to create folder structure.
             LogMessageToFile("INFO: ticketNumber: " + ticketNumber);
             string customerName = cmdArgs[4];
@@ -140,7 +141,7 @@ namespace getLogsV15
             LogMessageToFile("INFO: cmdPath: " + cmdPath);
             string localStagePath = GetTempPath() + "cvgetlog\\" + CCID;
             string fileList;// = "zipfilename";
-            string ftpUrl = "ftp://ccust01:NOTTHECORRECTPWD@qnftp01.commvault.com/incoming/";
+            Console.WriteLine("FTP: " + ftpUrl);
             string parentZipFile;
             string parentZipFileExt;
             string parentFilePath;
