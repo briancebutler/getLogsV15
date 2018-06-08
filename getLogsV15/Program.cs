@@ -492,7 +492,6 @@ namespace getLogsV15
             }
             finally { }
 
-            //Console.WriteLine("Last");
             LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
             LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
             Console.Read();
