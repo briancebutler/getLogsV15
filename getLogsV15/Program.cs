@@ -40,7 +40,7 @@ namespace getLogsV15
         static void Main(string[] args)
         {
             Console.SetWindowSize(85, 72); //Resize window
-            var stopWatch = Stopwatch.StartNew();
+            
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
             string cvgetlog = path + "\\cvgetlog"; //path.combine("localappdata","cvgetlog")
@@ -362,6 +362,7 @@ namespace getLogsV15
 
                 Console.WriteLine("You Selected: " + numlog);
                 Console.WriteLine("File Selected: " + zipFileList[numlog]);
+                var stopWatch = Stopwatch.StartNew();
                 LogMessageToFile("INFO: Log file selected " + zipFileList[numlog]);
 
                 parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
@@ -502,6 +503,7 @@ namespace getLogsV15
 
                 LogMessageToFile("INFO: Opening folder " + parentFilePath);
                 Process.Start("explorer", parentFilePath);
+                LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
                 LogMessageToFile("INFO: ################# EXITING CVGETLOGS #################");
 
                 return;
