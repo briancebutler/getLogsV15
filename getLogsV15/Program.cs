@@ -140,7 +140,7 @@ namespace getLogsV15
             LogMessageToFile("INFO: cmdPath: " + cmdPath);
             string localStagePath = GetTempPath() + "cvgetlog\\" + CCID;
             string fileList;// = "zipfilename";
-
+            string ftpUrl = "ftp://ccust01:NOTTHECORRECTPWD@qnftp01.commvault.com/incoming/";
             string parentZipFile;
             string parentZipFileExt;
             string parentFilePath;
@@ -196,12 +196,22 @@ namespace getLogsV15
 
             if (!Directory.Exists(fullLogPath))
             {
-                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]", fullLogPath);
+                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]\n\nIf you want to open qnftp01 enter [f]", fullLogPath);
                 recheckFolder = Console.ReadLine();
                 if (recheckFolder == "y")
                 {
                     LogMessageToFile("re-check log files selected");
                     goto recheckFullLogPath;
+                }
+                else if (recheckFolder == "f")
+                {
+                    Console.WriteLine("Opening ftp...");
+                    //Windows.OpenExplorer("c:\test");
+                    Process.Start("explorer", ftpUrl + CCID);
+                    //Console.ReadLine();
+                    return;
+
+
                 }
                 LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
                 LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
@@ -212,13 +222,23 @@ namespace getLogsV15
             recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
             {
-                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]...");
+                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]");
                 recheckShare = Console.ReadLine();
-
+                LogMessageToFile("INFO: recheckShare " + recheckShare);
                 if (recheckShare == "y")
                 {
                     LogMessageToFile("re-check log files selected");
                     goto recheck;
+                }
+                else if (recheckShare == "f")
+                {
+                    Console.WriteLine("Opening ftp...");
+                    //Windows.OpenExplorer("c:\test");
+                    Process.Start("explorer", ftpUrl + CCID);
+                    //Console.ReadLine();
+                    return;
+
+
                 }
                 else
                 {
