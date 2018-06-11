@@ -130,7 +130,7 @@ namespace getLogsV15
             LogMessageToFile("INFO: CCID: " + CCID);
             string fullLogPath = ceLogs + CCID; // Combines customer log path and commcell id to make valid path.
             LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
-            string extractTo = stagingDir + CCID + ticketNumber;
+            string extractTo = stagingDir + customerName+ "\\" + CCID + ticketNumber;
             LogMessageToFile("INFO: extractTo: " + extractTo);
             List<string> zipFileList = new List<string>(); //List for file selecti;on
             List<string> zipFileList2 = new List<string>(); //List for file selection
@@ -267,7 +267,7 @@ namespace getLogsV15
             }
 
 
-            Regex g = new Regex(@"\w+\.7z|.gz|.dmp|.zip"); //search 7z extracted cabs to find files inside.
+            Regex g = new Regex(@"\w+\.7z|.gz|.dmp|.zip|.tar"); //search 7z extracted cabs to find files inside.
 
             ProcessStartInfo pro = new ProcessStartInfo();
             pro.WindowStyle = ProcessWindowStyle.Hidden;
