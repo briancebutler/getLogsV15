@@ -417,6 +417,10 @@ namespace getLogsV15
                             LogMessageToFile("INFO: zipFileList3 item added to list" + zipFileList3);
 
                         }
+                        else if (subfile1.Contains(".tar"))
+                        {
+                            zipFileList2.Add(subfile1);
+                        }
                     }
 
                 }
