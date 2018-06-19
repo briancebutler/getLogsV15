@@ -351,29 +351,29 @@ namespace getLogsV15
             finally { }
 
 
-            if (numlog == 99)
-            {
-                Console.WriteLine("Opening ..." + fullLogPath);
-                Process.Start("explorer", fullLogPath);
-                return;
-            }
-            else if (numlog == 98)
-            {
-                Console.WriteLine("Opening ..." + extractTo);
-                Process.Start("explorer", extractTo);
-                return;
-            }
-            else if (numlog == 97)
-            {
-                numlog = 0;
-                goto Retry;
-            }
-            else if (numlog == 100)
-            {
-                Process.Start("explorer", ftpUrl + CCID);
-                Console.WriteLine("Opening ..." + ftpUrl + CCID);
-                return;
-            }
+                    if (numlog == 99)
+                    {
+                        Console.WriteLine("Opening ..." + fullLogPath);
+                        Process.Start("explorer", fullLogPath);
+                        return;
+                    }
+                    else if (numlog == 98)
+                    {
+                        Console.WriteLine("Opening ..." + extractTo);
+                        Process.Start("explorer", extractTo);
+                        return;
+                    }
+                    else if (numlog == 97)
+                    {
+                        numlog = 0;
+                        goto Retry;
+                    }
+                    else if (numlog == 100)
+                    {
+                        Process.Start("explorer", ftpUrl + CCID);
+                        Console.WriteLine("Opening ..." + ftpUrl + CCID);
+                        return;
+                    }
                 Console.WriteLine("You Selected: " + numlog);
                 Console.WriteLine("File Selected: " + zipFileList[numlog]);
                 var stopWatch = Stopwatch.StartNew();
