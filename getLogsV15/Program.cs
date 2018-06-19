@@ -338,7 +338,7 @@ namespace getLogsV15
             try
             {
                 numlog = 0;
-                Console.WriteLine("Choose:[#] | [Enter]=0 | [97]=Recheck | [98]=Local dir | [99]=CELOGS | [96]=QNFTP01");
+                Console.WriteLine("Choose:[#] | [Enter]=0 | [97]=Recheck | [98]=Local dir | [99]=CELOGS | [100]=QNFTP01");
                 numlog = Convert.ToInt32(Console.ReadLine());
 
 
@@ -368,7 +368,7 @@ namespace getLogsV15
                 numlog = 0;
                 goto Retry;
             }
-            else if (numlog == 96)
+            else if (numlog == 100)
             {
                 Process.Start("explorer", ftpUrl + CCID);
                 Console.WriteLine("Opening ..." + ftpUrl + CCID);
