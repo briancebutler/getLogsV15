@@ -338,7 +338,7 @@ namespace getLogsV15
             try
             {
                 numlog = 0;
-                Console.WriteLine("Choose File [#] [Enter] = 0, [97] = Recheck, [98] = Local dir, [99] = celogs dir:");
+                Console.WriteLine("Choose:[#] | [Enter]=0 | [97]=Recheck | [98]=Local dir | [99]=CELOGS | [96]=QNFTP01");
                 numlog = Convert.ToInt32(Console.ReadLine());
 
 
@@ -352,23 +352,28 @@ namespace getLogsV15
 
 
             if (numlog == 99)
-                {
-                    Console.WriteLine("Opening ..." + fullLogPath);
-                    Process.Start("explorer", fullLogPath);
-                    return;
-                }
-                else if (numlog == 98)
-                {
-                    Console.WriteLine("Opening ..." + extractTo);
-                    Process.Start("explorer", extractTo);
-                    return;
-                }
-                else if (numlog == 97)
-                {
-                    numlog = 0;
-                    goto Retry;
-                }
-
+            {
+                Console.WriteLine("Opening ..." + fullLogPath);
+                Process.Start("explorer", fullLogPath);
+                return;
+            }
+            else if (numlog == 98)
+            {
+                Console.WriteLine("Opening ..." + extractTo);
+                Process.Start("explorer", extractTo);
+                return;
+            }
+            else if (numlog == 97)
+            {
+                numlog = 0;
+                goto Retry;
+            }
+            else if (numlog == 96)
+            {
+                Process.Start("explorer", ftpUrl + CCID);
+                Console.WriteLine("Opening ..." + ftpUrl + CCID);
+                return;
+            }
                 Console.WriteLine("You Selected: " + numlog);
                 Console.WriteLine("File Selected: " + zipFileList[numlog]);
                 var stopWatch = Stopwatch.StartNew();
