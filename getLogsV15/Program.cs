@@ -157,7 +157,26 @@ namespace getLogsV15
             int numFolder4 = 0;
             var fileExt = new[] { ".7z", ".gz", ".tar" };
 
+            var time = DateTime.Now;
 
+
+            string sqlLiteDBFile = ".\\sqlLiteDBFile.db";
+
+            if (!File.Exists(sqlLiteDBFile))
+            {
+                SQLiteConnection.CreateFile(sqlLiteDBFile);
+                SQLiteConnection m_dbConnection;
+                m_dbConnection = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
+                m_dbConnection.Open();
+                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FileSelected VARCHAR(255), DateTime VARCHAR(30))";
+                SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                command.ExecuteNonQuery();
+                Console.WriteLine("Database Created: " + sqlLiteDBFile);
+            }
+
+            SQLiteConnection m_dbConnection2;
+            m_dbConnection2 = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
+            m_dbConnection2.Open();
 
 
 
@@ -391,6 +410,14 @@ namespace getLogsV15
                 string extractParentZip;
                 extractParentZip = extractTo + "\\" + parentZipFileExt;
                 Console.WriteLine("\nExtracting...\n" + extractTo + "\\" + parentZipFileExt);
+
+                // Insert Into SQLite - Start
+                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + time + "')";
+                Console.WriteLine(sqlQuery);
+                SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
+                command2.ExecuteNonQuery();
+                // Insert Into SQLite - End
+
                 LogMessageToFile("INFO: extractTo" + extractTo);
 
                 pro.Arguments = string.Format("x \"{0}\" -y -r {2}-o\"{1}\"", extractParentZip, extractTo + "\\*", excludeCSDB);    // extracts the 7z file found in the foreach above.
