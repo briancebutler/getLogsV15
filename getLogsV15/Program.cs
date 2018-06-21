@@ -174,7 +174,7 @@ namespace getLogsV15
                 command.ExecuteNonQuery();
                 LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
                 LogMessageToFile("INFO: SQLite Query: " + sql);
-                Console.WriteLine(path2);
+                //Console.WriteLine(path2);
             }
 
             //Open SQLite DB - Start
