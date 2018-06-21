@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SQLite;
 
 namespace getLogsV15
 {
@@ -154,10 +155,11 @@ namespace getLogsV15
             int numfile3 = 0; //Used when listing zip file contents to increment counter.
             int numFile4 = 0;
             int numFolder4 = 0;
-           
-
-
             var fileExt = new[] { ".7z", ".gz", ".tar" };
+
+
+
+
 
             if (extractDMP == "false")
             {
