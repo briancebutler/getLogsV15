@@ -179,6 +179,7 @@ namespace getLogsV15
 
             //Open SQLite DB - Start
             SQLiteConnection m_dbConnection2;
+            LogMessageToFile("INFO: Database Opened: " + path2 + "\\" + sqlLiteDBFile);
             m_dbConnection2 = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
             m_dbConnection2.Open();
             //Open SQLite DB - Done
