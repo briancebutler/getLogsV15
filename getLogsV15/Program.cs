@@ -162,7 +162,7 @@ namespace getLogsV15
 
             string sqlLiteDBFile = ".\\sqlLiteDBFile.db";
             string path2 = Directory.GetCurrentDirectory();
-            Console.WriteLine(path2);
+            //Console.WriteLine(path2);
             if (!File.Exists(sqlLiteDBFile))
             {
                 SQLiteConnection.CreateFile(sqlLiteDBFile);
