@@ -159,6 +159,7 @@ namespace getLogsV15
 
             var time = DateTime.Now;
 
+            Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
 
             string sqlLiteDBFile = ".\\sqlLiteDBFile.db";
             string path2 = Directory.GetCurrentDirectory();
