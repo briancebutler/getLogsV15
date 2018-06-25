@@ -72,13 +72,11 @@ namespace getLogsV15
                     LogMessageToFile("INFO:" + args[0]);
                 }
             }
-            string motd = "this is a test";
-            //#### MOTD
-            Console.WriteLine("################################: MOTD :################################\n   {0}\n\n\n########################################################################\n",motd);
+            
 
             string[] cmdArgs = inputArgs.Split('/');
 
-            Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
+            
 
             if (cmdArgs[5] == null)
             {
@@ -87,9 +85,9 @@ namespace getLogsV15
             else
             {
                 jobID = cmdArgs[5];
-                Console.WriteLine("Would you like to continue using job id: " + jobID);
+                //Console.WriteLine("Would you like to continue using job id: " + jobID);
                 //jobID = Console.ReadLine();
-                Console.WriteLine("\n");
+                //Console.WriteLine("\n");
             }
 
             var iniPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\inputfile.ini");
@@ -106,12 +104,14 @@ namespace getLogsV15
 
                 using (FileStream fs = File.Create(iniPath))
                 {
-                    Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false\nftpUrl =ftp://ccust01:NOTTHISPWD@qnftp01.commvault.com/incoming/");
+                    Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false\nmotd = true\nftpUrl =ftp://ccust01:NOTTHISPWD@qnftp01.commvault.com/incoming/");
 
                     fs.Write(info, 0, info.Length);
                 }
 
             }
+
+            
 
 
             LogMessageToFile("####iniPath#### " + iniPath);
@@ -125,6 +125,8 @@ namespace getLogsV15
             string extractDMP = dic["extractDMP"];
             LogMessageToFile("INFO_CFG: ExtractDMP: " + extractDMP);
             string ftpUrl = dic["ftpUrl"];
+            string motd = dic["motd"];
+            //string motd = "true";
             string ticketNumber = "\\" + cmdArgs[2]; //Not currenlty used other than to create folder structure.
             LogMessageToFile("INFO: ticketNumber: " + ticketNumber);
             string customerName = cmdArgs[4];
@@ -150,6 +152,18 @@ namespace getLogsV15
             string excludeCSDB = "";
             string recheckShare = "y";
             string recheckFolder = "y";
+            string motd2 = "";
+
+            if (motd=="true")
+            {
+                motd2 = "this is a test";
+                Console.WriteLine("################################: MOTD :################################\n   {0}\n\n\n########################################################################\n", motd2);
+            }
+            
+            //#### MOTD
+            
+
+            Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
 
             int numlog = 0; //Used to display the number of logs in the folder.
             int numlog2 = 0; //Used to display the number of logs in the folder.
