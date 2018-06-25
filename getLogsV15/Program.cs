@@ -92,6 +92,26 @@ namespace getLogsV15
 
             var iniPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\inputfile.ini");
 
+            var motdPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\motd.txt");
+
+
+            if (!File.Exists(motdPath))
+            {
+                
+                Console.WriteLine("######################################################################\n.\\motd.txt does not exist. \nThis file should be in the same directory as getLogs.exe\n\n\nCREATING MOTD.TXT with the default values\n");
+                LogMessageToFile("ERROR: File.Exists failed for motdPath " + motdPath);
+                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+
+                using (FileStream fs = File.Create(motdPath))
+                {
+                    Byte[] info = new UTF8Encoding(true).GetBytes("1:Don't turn around that answer is not back there.\n2:Don't trust the customer.\n3:The log files don't lie.");
+
+                    fs.Write(info, 0, info.Length);
+                }
+
+            }
+
+
             if (File.Exists(iniPath))
             {
                 LogMessageToFile("INFO: File.Exists for: " + iniPath + "is valid: Continue");
