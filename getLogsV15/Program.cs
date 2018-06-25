@@ -72,7 +72,9 @@ namespace getLogsV15
                     LogMessageToFile("INFO:" + args[0]);
                 }
             }
-
+            string motd = "this is a test";
+            //#### MOTD
+            Console.WriteLine("################################: MOTD :################################\n   {0}\n\n\n########################################################################\n",motd);
 
             string[] cmdArgs = inputArgs.Split('/');
 
