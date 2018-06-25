@@ -434,7 +434,7 @@ namespace getLogsV15
                 Console.WriteLine("\nExtracting...\n" + extractTo + "\\" + parentZipFileExt);
 
                 // Insert Into SQLite - Start
-                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + time + "')";
+                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + time + "')";
                 LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
                 SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
                 command2.ExecuteNonQuery();
