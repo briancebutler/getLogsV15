@@ -92,24 +92,8 @@ namespace getLogsV15
 
             var iniPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\inputfile.ini");
 
-            var motdPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\motd.txt");
 
 
-            if (!File.Exists(motdPath))
-            {
-                
-                Console.WriteLine("######################################################################\n.\\motd.txt does not exist. \nThis file should be in the same directory as getLogs.exe\n\n\nCREATING MOTD.TXT with the default values\n");
-                LogMessageToFile("ERROR: File.Exists failed for motdPath " + motdPath);
-                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-
-                using (FileStream fs = File.Create(motdPath))
-                {
-                    Byte[] info = new UTF8Encoding(true).GetBytes("1:Don't turn around that answer is not back there.\n2:Don't trust the customer.\n3:The log files don't lie.");
-
-                    fs.Write(info, 0, info.Length);
-                }
-
-            }
 
 
             if (File.Exists(iniPath))
@@ -124,7 +108,7 @@ namespace getLogsV15
 
                 using (FileStream fs = File.Create(iniPath))
                 {
-                    Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false\nmotd = true\nftpUrl =ftp://ccust01:NOTTHISPWD@qnftp01.commvault.com/incoming/");
+                    Byte[] info = new UTF8Encoding(true).GetBytes("7zipPath = c:\\progra~1\\7-Zip\\7z.exe\nceLogPath =\\\\eng\\celogs\\\nlocalStagingDir = C:\\LogFiles\\\nextractDMP = false\nftpUrl =ftp://ccust01:NOTTHISPWD@qnftp01.commvault.com/incoming/");
 
                     fs.Write(info, 0, info.Length);
                 }
@@ -145,8 +129,6 @@ namespace getLogsV15
             string extractDMP = dic["extractDMP"];
             LogMessageToFile("INFO_CFG: ExtractDMP: " + extractDMP);
             string ftpUrl = dic["ftpUrl"];
-            string motd = dic["motd"];
-            //string motd = "true";
             string ticketNumber = "\\" + cmdArgs[2]; //Not currenlty used other than to create folder structure.
             LogMessageToFile("INFO: ticketNumber: " + ticketNumber);
             string customerName = cmdArgs[4];
@@ -172,15 +154,9 @@ namespace getLogsV15
             string excludeCSDB = "";
             string recheckShare = "y";
             string recheckFolder = "y";
-            string motd2 = "";
 
-            if (motd=="true")
-            {
-                motd2 = "this is a test";
-                Console.WriteLine("################################: MOTD :################################\n   {0}\n\n\n########################################################################\n", motd2);
-            }
-            
-            //#### MOTD
+
+
             
 
             Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
