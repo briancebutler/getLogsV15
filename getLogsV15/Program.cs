@@ -40,6 +40,7 @@ namespace getLogsV15
 
         static void Main(string[] args)
         {
+            ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 72); //Resize window
             
             Retry:
@@ -154,10 +155,6 @@ namespace getLogsV15
             string excludeCSDB = "";
             string recheckShare = "y";
             string recheckFolder = "y";
-
-
-
-            
 
             Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
 
@@ -325,7 +322,16 @@ namespace getLogsV15
                 if (File.Exists(stageFile7z))
                 {
                     LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
-                    Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                    Console.ForegroundColor = ConsoleColor.Green;
+
+                    Console.Write("File:[{0}]",numlog++);
+                    //Console.ForegroundColor = defaultForeground;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("\tSize: [{0} MB]",s1);
+                    Console.ForegroundColor = defaultForeground;
+                    Console.WriteLine("\tCreated on: {1}\n {0}", dir, File.GetCreationTime(dir));
+                    //Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                    
                 }
                 else
                 {
@@ -334,7 +340,9 @@ namespace getLogsV15
                         LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
                         Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
                         x.WaitForExit();
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                        Console.ForegroundColor = defaultForeground;
                 }
 
                 using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
@@ -357,7 +365,9 @@ namespace getLogsV15
                             else //need to convert to else if due to .zip files in source upload.
                             {
                                 //LogMessageToFile("INFO: " + line);
+                                Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine("\tFile included: " + line.Remove(0, 53));
+                                Console.ForegroundColor = defaultForeground;
                             }
                         }
 
@@ -377,7 +387,9 @@ namespace getLogsV15
             try
             {
                 numlog = 0;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Choose:[#] | [Enter]=0 | [97]=Recheck | [98]=Local dir | [99]=CELOGS | [100]=QNFTP01");
+                Console.ForegroundColor = defaultForeground;
                 numlog = Convert.ToInt32(Console.ReadLine());
 
 
