@@ -328,8 +328,10 @@ namespace getLogsV15
                     //Console.ForegroundColor = defaultForeground;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write("\tSize: [{0} MB]",s1);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("\tCreated on: {0}", File.GetCreationTime(dir));
                     Console.ForegroundColor = defaultForeground;
-                    Console.WriteLine("\tCreated on: {1}\n {0}", dir, File.GetCreationTime(dir));
+                    Console.WriteLine("\n {0}", dir);
                     //Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
                     
                 }
