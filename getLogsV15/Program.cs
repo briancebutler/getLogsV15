@@ -140,6 +140,8 @@ namespace getLogsV15
             LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
             string extractTo = stagingDir + customerName+ "\\" + CCID + ticketNumber;
             LogMessageToFile("INFO: extractTo: " + extractTo);
+            string engLogs = "\\\\eng\\escalationlogs";
+            string stagePath = engLogs + "\\" + CCID + ticketNumber;
             List<string> zipFileList = new List<string>(); //List for file selecti;on
             List<string> zipFileList2 = new List<string>(); //List for file selection
             List<string> zipFileList3 = new List<string>(); //List for tar file selection
@@ -155,7 +157,7 @@ namespace getLogsV15
             string excludeCSDB = "";
             string recheckShare = "y";
             string recheckFolder = "y";
-
+            Console.WriteLine(stagePath);
             Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
 
             int numlog = 0; //Used to display the number of logs in the folder.
@@ -390,7 +392,7 @@ namespace getLogsV15
             {
                 numlog = 0;
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Choose:[#] | [Enter]=0 | [97]=Recheck | [98]=Local dir | [99]=CELOGS | [100]=QNFTP01");
+                Console.WriteLine("Choose:[#] | [96]=\\\\Eng | [97]=Recheck | [98]=Local dir | [99]=CELOGS | [100]=QNFTP01");
                 Console.ForegroundColor = defaultForeground;
                 numlog = Convert.ToInt32(Console.ReadLine());
 
@@ -426,6 +428,23 @@ namespace getLogsV15
                         Process.Start("explorer", ftpUrl + CCID);
                         Console.WriteLine("Opening ..." + ftpUrl + CCID);
                         return;
+                    }
+                    else if (numlog == 96)
+                    {
+
+                        if (!Directory.Exists(stagePath))
+                        {
+                            Directory.CreateDirectory(stagePath);
+                            LogMessageToFile("INFO: CreateDirectory: " + stagePath);
+                            Process.Start("explorer", stagePath);
+                            return;
+                        }
+                        else
+                        {
+                            Process.Start("explorer", stagePath);
+                            return;
+                        }
+
                     }
                 Console.WriteLine("You Selected: " + numlog);
                 Console.WriteLine("File Selected: " + zipFileList[numlog]);
