@@ -157,7 +157,7 @@ namespace getLogsV15
             string excludeCSDB = "";
             string recheckShare = "y";
             string recheckFolder = "y";
-            Console.WriteLine(stagePath);
+            //Console.WriteLine(stagePath);
             Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
 
             int numlog = 0; //Used to display the number of logs in the folder.
