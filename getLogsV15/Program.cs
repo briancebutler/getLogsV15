@@ -590,13 +590,10 @@ namespace getLogsV15
                         try
                         {
                                 File.Delete(currentFile);
-                                // Do stuff with file
-                                break; // When done we can break loop
+                                break;
                         }
                         catch (IOException e) when(i <= NumberOfRetries)
                         {
-                                // You may check error code to filter some exceptions, not every error
-                                // can be recovered.
                                 Thread.Sleep(DelayOnRetry);
                         }
                     }
