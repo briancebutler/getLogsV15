@@ -529,7 +529,19 @@ namespace getLogsV15
                     //LogMessageToFile("INFO: Extracting parent zips: 7z.exe " + pro.Arguments);
                     z.WaitForExit();
                     //LogMessageToFile("DELETE: Filename to delete: " + currentFile);
-                    File.Delete(currentFile);
+
+                    for (int i = 1; i <= NumberOfRetries; ++i)
+                    {
+                        try
+                        {
+                            File.Delete(currentFile);
+                            break;
+                        }
+                        catch (IOException e) when (i <= NumberOfRetries)
+                        {
+                            Thread.Sleep(DelayOnRetry);
+                        }
+                    }
                 });
 
                 pro.FileName = cmdPath;
@@ -547,7 +559,19 @@ namespace getLogsV15
                     pro.Arguments = string.Format("{4}\"{0}\" | \"{2}\" {3}\"{1}\"", currentFile, parentFilePath + "\\" + result + "\\", zPath, sub7zipArg, top7zipArg);
                     Process z = Process.Start(pro);
                     z.WaitForExit();
-                    File.Delete(currentFile);
+
+                    for (int i = 1; i <= NumberOfRetries; ++i)
+                    {
+                        try
+                        {
+                            File.Delete(currentFile);
+                            break;
+                        }
+                        catch (IOException e) when (i <= NumberOfRetries)
+                        {
+                            Thread.Sleep(DelayOnRetry);
+                        }
+                    }
                     LogMessageToFile("DELETE " + currentFile);
                     LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
 
