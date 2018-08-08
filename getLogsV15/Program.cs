@@ -655,7 +655,5 @@ namespace getLogsV15
 //##### Project list:
 //Add support for .zip files.
 //FIX multiple access to log file.
-//parallel unzip sub zips.
-//GEt count in "zipFileList" list and limit to the last 10 when displaying the list of log files. 
-//Get count in list
+
 
