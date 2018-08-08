@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Data.SQLite;
 
 namespace getLogsV15
@@ -42,7 +43,7 @@ namespace getLogsV15
         {
             ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 72); //Resize window
-            
+
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
             string cvgetlog = path + "\\cvgetlog"; //path.combine("localappdata","cvgetlog")
@@ -73,11 +74,11 @@ namespace getLogsV15
                     LogMessageToFile("INFO:" + args[0]);
                 }
             }
-            
+
 
             string[] cmdArgs = inputArgs.Split('/');
 
-            
+
 
             if (cmdArgs[5] == null)
             {
@@ -116,7 +117,7 @@ namespace getLogsV15
 
             }
 
-            
+
 
 
             LogMessageToFile("####iniPath#### " + iniPath);
@@ -138,7 +139,7 @@ namespace getLogsV15
             LogMessageToFile("INFO: CCID: " + CCID);
             string fullLogPath = ceLogs + CCID; // Combines customer log path and commcell id to make valid path.
             LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
-            string extractTo = stagingDir + customerName+ "\\" + CCID + ticketNumber;
+            string extractTo = stagingDir + customerName + "\\" + CCID + ticketNumber;
             LogMessageToFile("INFO: extractTo: " + extractTo);
             string engLogs = "\\\\eng\\escalationlogs";
             string stagePath = engLogs + "\\" + CCID + ticketNumber;
@@ -166,6 +167,9 @@ namespace getLogsV15
             int numfile3 = 0; //Used when listing zip file contents to increment counter.
             int numFile4 = 0;
             int numFolder4 = 0;
+            int NumberOfRetries = 3;
+            int DelayOnRetry = 1000;
+
             var fileExt = new[] { ".7z", ".gz", ".tar" };
 
             var time = DateTime.Now;
@@ -222,7 +226,7 @@ namespace getLogsV15
                 return;
             }
 
-            if(!Directory.Exists(stagingDir))
+            if (!Directory.Exists(stagingDir))
             {
                 Console.WriteLine("######################################################################\nCreating the following directory to store your log files\nIf you wish to change this path please update the inputfile.ini file LocalStagingDir\nValue: " + stagingDir + "\n######################################################################\n\n");
                 DirectoryInfo di = Directory.CreateDirectory(stagingDir);
@@ -319,34 +323,34 @@ namespace getLogsV15
                 Decimal s1 = f.Length / 1024 / 1024;
                 zipFileList.Add(dir); // Add each 7zip file to the list zipFileList
                 fileList = Path.GetFileNameWithoutExtension(dir);
-                string stageFile7z = localStagePath + "\\" + fileList + numlog22++ +".txt";
+                string stageFile7z = localStagePath + "\\" + fileList + numlog22++ + ".txt";
 
                 if (File.Exists(stageFile7z))
                 {
                     LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
                     Console.ForegroundColor = ConsoleColor.Green;
 
-                    Console.Write("File:[{0}]",numlog++);
+                    Console.Write("File:[{0}]", numlog++);
                     //Console.ForegroundColor = defaultForeground;
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("\tSize: [{0} MB]",s1);
+                    Console.Write("\tSize: [{0} MB]", s1);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("\tCreated on: {0}", File.GetCreationTime(dir));
                     Console.ForegroundColor = defaultForeground;
                     Console.WriteLine("\n {0}", dir);
                     //Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-                    
+
                 }
                 else
                 {
                     LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
-                        pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
-                        LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
-                        Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
-                        x.WaitForExit();
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-                        Console.ForegroundColor = defaultForeground;
+                    pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
+                    LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
+                    Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
+                    x.WaitForExit();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                    Console.ForegroundColor = defaultForeground;
                 }
 
                 using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
@@ -406,54 +410,54 @@ namespace getLogsV15
             finally { }
 
 
-                    if (numlog == 99)
-                    {
-                        Console.WriteLine("Opening ..." + fullLogPath);
-                        Process.Start("explorer", fullLogPath);
-                        return;
-                    }
-                    else if (numlog == 98)
-                    {
-                        Console.WriteLine("Opening ..." + extractTo);
-                        Process.Start("explorer", extractTo);
-                        return;
-                    }
-                    else if (numlog == 97)
-                    {
-                        numlog = 0;
-                        goto Retry;
-                    }
-                    else if (numlog == 100)
-                    {
-                        Process.Start("explorer", ftpUrl + CCID);
-                        Console.WriteLine("Opening ..." + ftpUrl + CCID);
-                        return;
-                    }
-                    else if (numlog == 96)
-                    {
+            if (numlog == 99)
+            {
+                Console.WriteLine("Opening ..." + fullLogPath);
+                Process.Start("explorer", fullLogPath);
+                return;
+            }
+            else if (numlog == 98)
+            {
+                Console.WriteLine("Opening ..." + extractTo);
+                Process.Start("explorer", extractTo);
+                return;
+            }
+            else if (numlog == 97)
+            {
+                numlog = 0;
+                goto Retry;
+            }
+            else if (numlog == 100)
+            {
+                Process.Start("explorer", ftpUrl + CCID);
+                Console.WriteLine("Opening ..." + ftpUrl + CCID);
+                return;
+            }
+            else if (numlog == 96)
+            {
 
-                        if (!Directory.Exists(stagePath))
-                        {
-                            Directory.CreateDirectory(stagePath);
-                            LogMessageToFile("INFO: CreateDirectory: " + stagePath);
-                            Process.Start("explorer", stagePath);
-                            return;
-                        }
-                        else
-                        {
-                            Process.Start("explorer", stagePath);
-                            return;
-                        }
+                if (!Directory.Exists(stagePath))
+                {
+                    Directory.CreateDirectory(stagePath);
+                    LogMessageToFile("INFO: CreateDirectory: " + stagePath);
+                    Process.Start("explorer", stagePath);
+                    return;
+                }
+                else
+                {
+                    Process.Start("explorer", stagePath);
+                    return;
+                }
 
-                    }
-                Console.WriteLine("You Selected: " + numlog);
-                Console.WriteLine("File Selected: " + zipFileList[numlog]);
-                var stopWatch = Stopwatch.StartNew();
-                LogMessageToFile("INFO: Log file selected " + zipFileList[numlog]);
+            }
+            Console.WriteLine("You Selected: " + numlog);
+            Console.WriteLine("File Selected: " + zipFileList[numlog]);
+            var stopWatch = Stopwatch.StartNew();
+            LogMessageToFile("INFO: Log file selected " + zipFileList[numlog]);
 
-                parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
-                LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
-                File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
+            parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
+            LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
+            File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
 
             try
             {
@@ -574,15 +578,31 @@ namespace getLogsV15
                 Parallel.ForEach(zipFileList4, (currentFile) =>
                 {
 
-                    string outputFolder;
-                    outputFolder = Path.GetDirectoryName(currentFile);
-                    pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder + "\\*");    // extracts the 7z file found in the foreach above.
-                    Process z = Process.Start(pro);
-                    Console.WriteLine("Extracting: " + currentFile);
-                    z.WaitForExit();
-                    File.Delete(currentFile);
+                string outputFolder;
+                outputFolder = Path.GetDirectoryName(currentFile);
+                pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder + "\\*");    // extracts the 7z file found in the foreach above.
+                Process z = Process.Start(pro);
+                Console.WriteLine("Extracting: " + currentFile);
+                z.WaitForExit();
 
-                });
+                    for (int i=1; i <= NumberOfRetries; ++i) 
+                    {
+                        try
+                        {
+                                File.Delete(currentFile);
+                                // Do stuff with file
+                                break; // When done we can break loop
+                        }
+                        catch (IOException e) when(i <= NumberOfRetries)
+                        {
+                                // You may check error code to filter some exceptions, not every error
+                                // can be recovered.
+                                Thread.Sleep(DelayOnRetry);
+                        }
+                    }
+
+
+});
 
                 LogMessageToFile("INFO: Opening folder " + parentFilePath);
                 Process.Start("explorer", parentFilePath);
