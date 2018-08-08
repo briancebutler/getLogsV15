@@ -691,20 +691,3 @@ namespace getLogsV15
 //GEt count in "zipFileList" list and limit to the last 10 when displaying the list of log files. 
 //Get count in list
 
-
-//##### Problems
-
-
-//1. Cab file is incomplete so it fails to find the path to extract to
-
-//Extracting...
-//F:\LogFiles\F96C9\180521-375\sendLogFiles_F96C9_2018_05_21_11_57_41_14510253.7z
-//The process failed: System.IO.DirectoryNotFoundException: Could not find a part of the path 'F:\LogFiles\F96C9\180521-375\sendLogFiles_F96C9_2018_05_21_11_57_41_14510253'.
-//   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
-//   at System.IO.FileSystemEnumerableIterator`1.CommonInit()
-//   at System.IO.FileSystemEnumerableIterator`1..ctor(String path, String originalUserPath, String searchPattern, SearchOption searchOption, SearchResultHandler`1 resultHandler, Boolean checkHost)
-//   at System.IO.Directory.GetFiles(String path)
-//   at getLogsV14.Program.Main(String[] args) in F:\C#\getLogsV14\getLogsV14\getLogsV14\Program.cs:line 352
-
-
-
