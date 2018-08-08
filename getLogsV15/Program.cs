@@ -652,38 +652,6 @@ namespace getLogsV15
 
 
 
-
-//##### Change Log: 
-//04/18/2018 - Added file size and date created for inital list of parentFilePath.
-//04/19/2018 - Added folder open after logs are done extracting.
-//04/19/2018 - Store values in txt/ini file.
-//04/20/2018 - Additional folder/file checks using directory.exists and file.exists. (zPath,ceLogs,stagingDir,fullLogPath)
-//04/20/2018 - Added logging to %localappdata%\CVGetLogs.txt
-//04/20/2018 - Added sort of fullLogPath using .OrderByDescending(File.GetCreationTime)
-//04/29/2018 - Logic to check if parentFilePath exists before continuing to list the folder contents.
-//04/30/2018 - Added check for cab files using localStagePath
-//04/30/2018 - created local staging folder to be used with list of cab contents per CCID
-//05/01/2018 - Added list of 7z contents to console output using 7z.exe l to create a  txt list of items.
-//05/01/2018 - Added logic to create local folder %localappdata%l\cvgetlog if it does not exist.
-//05/02/2018 - Modified regex to include .dmp and .gz files "\w+\.7z|.gz|.dmp". Also modified filter path to filter lines with celogs instead of _.
-//05/08/2018 - Corrected pro.args from "/c {3} L \"{0}\" -r >{1}\\{2}.txt\"" to  "/c \"{3}\" L \"{0}\" -r >{1}\\{2}.txt\"" to correct 7zip input file path.
-//05/08/2018 - added exclude *.dmp from extraction.
-//05/14/2018 - Added logic to create the extractTo folder bfore the sub zip file extraction, and removed the second routine that created the folder if it did not exist.
-//05/14/2018 - Added Parallel.ForEach to extract each second level zip file.
-//05/18/2018 - Added goto Retry; for # 97 when getting a list of initial log files for download.
-//05/18/2018 - Added extraction of sub zip files such as systeminfo.7z.
-//05/21/2018 - Added parent / child .7z cleanup. Example servername.7z, and systeminfo.7z
-//05/21/2018 - Excluded SQL_ERROR_LOGS from being extracted due to error. Needs further review.
-//05/22/2018 - Added inputfile.ini check to confirm it exists. Display location/file format when it does not.
-//05/22/2018 - Added creation of inputfile.ini with default values.
-//05/22/2018 - Added the creation of local staging path if it does not exist.
-//05/31/2018 - Added re-check to log share using goto recheck;
-//06/05/2018 - Added tar.gz support.
-//06/05/2018 - Corrected default numlog =0 using try catch.
-//06/05/2018 - //Check if C:\Users\bbutler\AppData\Local\cvgetlog\F473E files exist already if they do do not recreate them.
-
-
-
 //##### Project list:
 //Add support for .zip files.
 //FIX multiple access to log file.
