@@ -42,7 +42,7 @@ namespace getLogsV15
         static void Main(string[] args)
         {
             ConsoleColor defaultForeground = Console.ForegroundColor;
-            Console.SetWindowSize(85, 72); //Resize window
+            //Console.SetWindowSize(85, 72); //Resize window
 
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
