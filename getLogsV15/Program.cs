@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Data.SQLite;
 
+
 namespace getLogsV15
 {
     class Program
@@ -37,13 +38,18 @@ namespace getLogsV15
                 sw.Close();
             }
         }
+        
 
 
-        static void Main(string[] args)
+
+            static void Main(string[] args)
         {
             ConsoleColor defaultForeground = Console.ForegroundColor;
-            //Console.SetWindowSize(85, 72); //Resize window
-
+            Console.SetWindowSize(85, 63); //Resize window
+            //Console.SetWindowSize(1, 1);
+            Console.SetBufferSize(85, 80);
+            //Console.SetWindowSize(40, 20);
+            //Console.SetWindowPosition(0, 0);
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
             string cvgetlog = path + "\\cvgetlog"; //path.combine("localappdata","cvgetlog")
