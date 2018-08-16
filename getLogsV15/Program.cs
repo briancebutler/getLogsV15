@@ -471,9 +471,10 @@ namespace getLogsV15
                 string extractParentZip;
                 extractParentZip = extractTo + "\\" + parentZipFileExt;
                 Console.WriteLine("\nExtracting...\n" + extractTo + "\\" + parentZipFileExt);
-
+                string statusActive = "YES";
+                string statusDeleted = "NO";
                 // Insert Into SQLite - Start
-                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "')";
+                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
                 LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
                 SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
                 command2.ExecuteNonQuery();
