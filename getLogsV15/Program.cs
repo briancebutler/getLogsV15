@@ -191,7 +191,7 @@ namespace getLogsV15
                 SQLiteConnection m_dbConnection;
                 m_dbConnection = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
                 m_dbConnection.Open();
-                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FileSelected VARCHAR(255), DateTime VARCHAR(30))";
+                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FileSelected VARCHAR(255), DateTime VARCHAR(30), Active VARCHAR(3), Deleted VARCHAR(3))";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
                 LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
@@ -473,7 +473,7 @@ namespace getLogsV15
                 Console.WriteLine("\nExtracting...\n" + extractTo + "\\" + parentZipFileExt);
 
                 // Insert Into SQLite - Start
-                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + time + "')";
+                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FileSelected, DateTime) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "')";
                 LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
                 SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
                 command2.ExecuteNonQuery();
