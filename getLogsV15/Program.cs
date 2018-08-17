@@ -145,7 +145,8 @@ namespace getLogsV15
             LogMessageToFile("INFO: CCID: " + CCID);
             string fullLogPath = ceLogs + CCID; // Combines customer log path and commcell id to make valid path.
             LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
-            string extractTo = stagingDir + customerName + "\\" + CCID + ticketNumber;
+            string extractTo = stagingDir + customerName + ticketNumber;
+            //string extractTo = stagingDir + customerName + "\\" + CCID + ticketNumber;
             LogMessageToFile("INFO: extractTo: " + extractTo);
             string engLogs = "\\\\eng\\escalationlogs";
             string stagePath = engLogs + "\\" + CCID + ticketNumber;
