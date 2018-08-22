@@ -535,7 +535,11 @@ namespace getLogsV15
                     goto Retry;
                 }
 
-                Console.WriteLine("Working on parent .7z files");
+
+                int zfilecount2 = zipFileList2.Count;
+                Console.WriteLine("\nWorking on {0} parent .7z files", zfilecount2);
+
+
                 Parallel.ForEach(zipFileList2, (currentFile) =>
                 {
                     //Console.WriteLine("\nExtracting...\n" + currentFile);
@@ -566,7 +570,8 @@ namespace getLogsV15
 
 
                 pro.FileName = cmdPath;
-                Console.WriteLine("Working on parent .gz/tar files");
+                int zfilecount3 = zipFileList3.Count;
+                Console.WriteLine("Working on {0} parent .gz/tar files", zfilecount3);
                 Parallel.ForEach(zipFileList3, (currentFile) =>
                 {
 
@@ -629,8 +634,8 @@ namespace getLogsV15
 
                     }
                 }
-
-                Console.WriteLine("Working on sub directory .7z files");
+                int zfilecount4 = zipFileList4.Count;
+                Console.WriteLine("Working on {0} sub directory .7z files", zfilecount4);
                 Parallel.ForEach(zipFileList4, (currentFile) =>
                 {
 
@@ -657,7 +662,9 @@ namespace getLogsV15
 
                 });
 
-                Console.WriteLine("Working on sub directory .zip files");
+                int zfilecount5 = zipFileList5.Count;
+                Console.WriteLine("Working on {0} sub directory .zip files", zfilecount5);
+
                 Parallel.ForEach(zipFileList5, (currentFile) =>
                 {
 
