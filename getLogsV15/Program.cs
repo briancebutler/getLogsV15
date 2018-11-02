@@ -194,7 +194,7 @@ namespace getLogsV15
                 SQLiteConnection m_dbConnection;
                 m_dbConnection = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
                 m_dbConnection.Open();
-                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FolderSelected VARCHAR(255), DateTime VARCHAR(30), Active VARCHAR(3), Deleted VARCHAR(3))";
+                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FolderSelected VARCHAR(255), 7zFile VARCHAR(255), 7zFolderSelected VARCHAR(255), DateTime VARCHAR(30), Active VARCHAR(3), Deleted VARCHAR(3))";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
                 LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
