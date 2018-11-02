@@ -194,7 +194,7 @@ namespace getLogsV15
                 SQLiteConnection m_dbConnection;
                 m_dbConnection = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
                 m_dbConnection.Open();
-                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FolderSelected VARCHAR(255), 7zFile VARCHAR(255), 7zFolderSelected VARCHAR(255), DateTime VARCHAR(30), Active VARCHAR(3), Deleted VARCHAR(3))";
+                string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FolderSelected VARCHAR(255), zFile VARCHAR(255), zFolderSelected VARCHAR(255), DateTime VARCHAR(30), Active VARCHAR(3), Deleted VARCHAR(3))";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
                 LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
@@ -473,12 +473,16 @@ namespace getLogsV15
                 parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
                 string extractParentZip;
                 extractParentZip = extractTo + "\\" + parentZipFileExt;
+                string extractPathWithoutExt;
+                extractPathWithoutExt = extractTo + "\\" + Path.GetFileNameWithoutExtension(extractParentZip);
                 Console.WriteLine("\nExtracting...\n" + extractTo + "\\" + parentZipFileExt);
                 string statusActive = "YES";
                 string statusDeleted = "NO";
                 // Insert Into SQLite - Start
-                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
+                //string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
+                string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, zFile, zFolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + extractPathWithoutExt + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
                 LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
+                //Console.Read();
                 SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
                 command2.ExecuteNonQuery();
                 // Insert Into SQLite - End
