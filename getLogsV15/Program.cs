@@ -273,7 +273,7 @@ namespace getLogsV15
             recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
             {
-                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]");
+                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [o]", fullLogPath);
                 recheckShare = Console.ReadLine();
                 LogMessageToFile("INFO: recheckShare " + recheckShare);
                 if (recheckShare == "y")
@@ -288,8 +288,11 @@ namespace getLogsV15
                     Process.Start("explorer", ftpUrl + CCID);
                     //Console.ReadLine();
                     return;
-
-
+                }
+                else if (recheckShare == "o")
+                {
+                    Process.Start("explorer", fullLogPath);
+                    return;
                 }
                 else
                 {
