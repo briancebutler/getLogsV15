@@ -273,7 +273,7 @@ namespace getLogsV15
             recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
             {
-                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [o]", fullLogPath);
+                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [o]\n\nIf you would like to open {1} type [e]", fullLogPath, stagePath);
                 recheckShare = Console.ReadLine();
                 LogMessageToFile("INFO: recheckShare " + recheckShare);
                 if (recheckShare == "y")
@@ -293,6 +293,22 @@ namespace getLogsV15
                 {
                     Process.Start("explorer", fullLogPath);
                     return;
+                }
+                else if (recheckShare == "e")
+                {
+                    if (!Directory.Exists(stagePath))
+                    {
+                        Directory.CreateDirectory(stagePath);
+                        LogMessageToFile("INFO: CreateDirectory: " + stagePath);
+                        Process.Start("explorer", stagePath);
+                        return;
+                    }
+                    else
+                    {
+                        Process.Start("explorer", stagePath);
+                        return;
+                    }
+
                 }
                 else
                 {
