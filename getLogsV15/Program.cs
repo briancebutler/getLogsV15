@@ -216,6 +216,12 @@ namespace getLogsV15
                 LogMessageToFile("INFO: Extract DMP file? " + extractDMP);
             }
 
+            if (!Directory.Exists(extractTo))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(extractTo);
+                LogMessageToFile("INFO: extractTo was created " + extractTo);
+            }
+
 
             if (!File.Exists(zPath))
             {
@@ -273,7 +279,7 @@ namespace getLogsV15
             recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
             {
-                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [o]\n\nIf you would like to open {1} type [e]", fullLogPath, stagePath);
+                Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [c]\n\nIf you would like to open {1} type [e]\n\nIf you would like to open {2} type [d]", fullLogPath, stagePath, extractTo);
                 recheckShare = Console.ReadLine();
                 LogMessageToFile("INFO: recheckShare " + recheckShare);
                 if (recheckShare == "y")
@@ -289,11 +295,20 @@ namespace getLogsV15
                     //Console.ReadLine();
                     return;
                 }
-                else if (recheckShare == "o")
+                else if (recheckShare == "c")
                 {
                     Process.Start("explorer", fullLogPath);
                     return;
                 }
+
+                else if (recheckShare == "d")
+                {
+                    Console.WriteLine("Opening ..." + extractTo);
+                    Process.Start("explorer", extractTo);
+                    return;
+                }
+
+
                 else if (recheckShare == "e")
                 {
                     if (!Directory.Exists(stagePath))
@@ -330,11 +345,11 @@ namespace getLogsV15
                 LogMessageToFile("INFO: localStagePath was created " + localStagePath);
             }
 
-            if (!Directory.Exists(extractTo))
-            {
-                DirectoryInfo di = Directory.CreateDirectory(extractTo);
-                LogMessageToFile("INFO: extractTo was created " + extractTo);
-            }
+            //if (!Directory.Exists(extractTo))
+            //{
+            //    DirectoryInfo di = Directory.CreateDirectory(extractTo);
+            //    LogMessageToFile("INFO: extractTo was created " + extractTo);
+            //}
 
 
             Regex g = new Regex(@"\w+\.7z|.gz|.dmp|.zip|.tar"); //search 7z extracted cabs to find files inside.
