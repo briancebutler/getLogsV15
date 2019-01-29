@@ -253,12 +253,36 @@ namespace getLogsV15
 
             if (!Directory.Exists(fullLogPath))
             {
-                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]\n\nIf you want to open qnftp01 enter [f]", fullLogPath);
+                Console.WriteLine("Customer CCID folder {0} does not yet exist.\n\nWould you like to re-check for the folder [Y/N]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [c].\n\nIf you would like to open {1} type [e].\n\nIf you would like to open {2} type [d].", fullLogPath,stagePath,extractTo);
                 recheckFolder = Console.ReadLine();
                 if (recheckFolder == "y")
                 {
                     LogMessageToFile("re-check log files selected");
                     goto recheckFullLogPath;
+                }
+                else if (recheckFolder == "c")
+                {
+                    //Console.WriteLine("Opening ftp...");
+                    //Windows.OpenExplorer("c:\test");
+                    Process.Start("explorer", fullLogPath);
+                    //Console.ReadLine();
+                    return;
+                }
+                else if (recheckFolder == "d")
+                {
+                    //Console.WriteLine("Opening ftp...");
+                    //Windows.OpenExplorer("c:\test");
+                    Process.Start("explorer",extractTo);
+                    //Console.ReadLine();
+                    return;
+                }
+                else if (recheckFolder == "e")
+                {
+                    //Console.WriteLine("Opening ftp...");
+                    //Windows.OpenExplorer("c:\test");
+                    Process.Start("explorer", stagePath);
+                    //Console.ReadLine();
+                    return;
                 }
                 else if (recheckFolder == "f")
                 {
@@ -417,9 +441,10 @@ namespace getLogsV15
                             {
                                 //LogMessageToFile("INFO: " + line);
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("\tFile included: " + line.Remove(0, 53));
+                                Console.WriteLine("\tFile: " + line.Remove(0, 53));
                                 Console.ForegroundColor = defaultForeground;
                             }
+                            
                         }
 
                         //else
