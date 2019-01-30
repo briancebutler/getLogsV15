@@ -106,7 +106,7 @@ namespace getLogsV15
 
             if (File.Exists(iniPath))
             {
-                LogMessageToFile("INFO: File.Exists for: " + iniPath + "is valid: Continue");
+                LogMessageToFile("INFO: File.Exists for: " + iniPath + " is valid: Continue");
             }
             else
             {
@@ -299,10 +299,26 @@ namespace getLogsV15
                 return;
             }
 
+            Console.ForegroundColor = defaultForeground;
+            Console.ForegroundColor = ConsoleColor.Red;
+            foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
+            {
+                if(dir.Contains(".00") || (dir.Contains(".zip") || (dir.Contains(".cab"))))
+                {
+                    Console.WriteLine("\n##### Additional file found #######\n{0}",dir);
+                    //LogMessageToFile("Found.001 file");
+                    //Console.WriteLine(dir);
+                }
+          
+
+            }
+            //Console.WriteLine("");
+            Console.ForegroundColor = defaultForeground;
 
             recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
             {
+                
                 Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [c]\n\nIf you would like to open {1} type [e]\n\nIf you would like to open {2} type [d]", fullLogPath, stagePath, extractTo);
                 recheckShare = Console.ReadLine();
                 LogMessageToFile("INFO: recheckShare " + recheckShare);
