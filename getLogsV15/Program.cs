@@ -305,7 +305,7 @@ namespace getLogsV15
             {
                 if(dir.Contains(".00") || (dir.Contains(".zip") || (dir.Contains(".cab"))))
                 {
-                    Console.WriteLine("\n##### Additional file found #######\n{0}",dir);
+                    Console.WriteLine("\n##### Additional file found #######\n{0}",dir + " \n" + File.GetCreationTime(dir));
                     //LogMessageToFile("Found.001 file");
                     //Console.WriteLine(dir);
                 }
