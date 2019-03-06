@@ -792,7 +792,7 @@ namespace getLogsV15
 
             LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
             LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
-            //Console.Read();
+            Console.Read();
 
         }
     }
