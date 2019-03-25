@@ -436,38 +436,49 @@ namespace getLogsV15
                     Console.ForegroundColor = defaultForeground;
                 }
 
-                using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
+                try
                 {
-                    string line;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        Match m = g.Match(line);
-                        if (m.Success)
-                        {
-                            if (line.Contains("celogs") == true) //This is used to skip regex search for files that contain celogs in the path.
-                            {
-                                //Console.WriteLine("not here");
-                            }
-                            //else if (line.Contains("Type = zip") == true) // Logic to collect .zip files also. Currently broken.
-                            //{
-                            //numfile3 = numfile3 -1;
-                            //Console.WriteLine("\tNo Machine Info found");
-                            //}
-                            else //need to convert to else if due to .zip files in source upload.
-                            {
-                                //LogMessageToFile("INFO: " + line);
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine("\tFile: " + line.Remove(0, 53));
-                                Console.ForegroundColor = defaultForeground;
-                            }
-                            
-                        }
+                    using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
 
-                        //else
-                        //{
-                        //    //Console.WriteLine(line);
-                        //}
+                    {
+                        string line;
+                        while ((line = r.ReadLine()) != null)
+                        {
+                            Match m = g.Match(line);
+                            if (m.Success)
+                            {
+                                if (line.Contains("celogs") == true) //This is used to skip regex search for files that contain celogs in the path.
+                                {
+                                    //Console.WriteLine("not here");
+                                }
+                                //else if (line.Contains("Type = zip") == true) // Logic to collect .zip files also. Currently broken.
+                                //{
+                                //numfile3 = numfile3 -1;
+                                //Console.WriteLine("\tNo Machine Info found");
+                                //}
+                                else //need to convert to else if due to .zip files in source upload.
+                                {
+                                    //LogMessageToFile("INFO: " + line);
+                                    Console.ForegroundColor = ConsoleColor.Cyan;
+                                    Console.WriteLine("\tFile: " + line.Remove(0, 53));
+                                    Console.ForegroundColor = defaultForeground;
+                                }
+
+                            }
+
+                            //else
+                            //{
+                            //    //Console.WriteLine(line);
+                            //}
+                        }
                     }
+                }
+                catch (System.IO.FileNotFoundException)
+                {
+                    Console.WriteLine("Detected an issue in the localStagePath deleting the following volume " + localStagePath + "\n Retrying the operation! Please dont fail!!");
+                    Directory.Delete(localStagePath);
+                    LogMessageToFile("Deleted the following path due to staging issue" + localStagePath);
+                    goto Retry;
                 }
 
                 Console.WriteLine(" ");
