@@ -16,6 +16,7 @@ namespace getLogsV15
 {
     class Program
     {
+        //Setting GetTempPath
         public static string GetTempPath()
         {
             string path = System.Environment.GetEnvironmentVariable("localappdata");
@@ -23,6 +24,7 @@ namespace getLogsV15
             return path;
         }
 
+        //Method to write to a log file "LogMessageToFile("TEXT" + variable);"
         public static void LogMessageToFile(string msg)
 
         {
@@ -45,9 +47,9 @@ namespace getLogsV15
             static void Main(string[] args)
         {
             ConsoleColor defaultForeground = Console.ForegroundColor;
-            Console.SetWindowSize(85, 63); //Resize window
+            Console.SetWindowSize(85, 45); //Resize window
             //Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(85, 80);
+            Console.SetBufferSize(85, 200);
             //Console.SetWindowSize(40, 20);
             //Console.SetWindowPosition(0, 0);
             Retry:
@@ -60,7 +62,7 @@ namespace getLogsV15
                 LogMessageToFile("INFO: CreateDirectory: " + cvgetlog);
             }
 
-            LogMessageToFile("Info: Console.SetWindowSize(85,72)");
+            //LogMessageToFile("Info: Console.SetWindowSize(85,72)");
 
             LogMessageToFile("INFO: ################# STARTING CVGETLOGS #################");
             string inputArgs = "cvgetlogs";
