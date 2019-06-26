@@ -49,7 +49,7 @@ namespace getLogsV15
             ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 45); //Resize window
             //Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(85, 200);
+            Console.SetBufferSize(85, 1024);
             //Console.SetWindowSize(40, 20);
             //Console.SetWindowPosition(0, 0);
             Retry:
