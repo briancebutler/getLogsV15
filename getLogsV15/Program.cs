@@ -305,7 +305,7 @@ namespace getLogsV15
             Console.ForegroundColor = ConsoleColor.Red;
             foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
             {
-                if(dir.Contains(".00") || (dir.Contains(".zip") || (dir.Contains(".cab"))))
+                if(dir.Contains(".00") || (dir.Contains(".zip") || (dir.Contains(".cab") || (dir.Contains(".bak")))))
                 {
                     Console.WriteLine("\n##### Additional file found #######\n{0}",dir + " \n" + File.GetCreationTime(dir));
                     //LogMessageToFile("Found.001 file");
