@@ -189,6 +189,8 @@ namespace getLogsV15
 
             string sqlLiteDBFile = ".\\sqlLiteDBFile.db";
             string path2 = Directory.GetCurrentDirectory();
+
+            //Console.WriteLine("DB File is located in " + path2 + sqlLiteDBFile);
             //Console.WriteLine(path2);
             if (!File.Exists(sqlLiteDBFile))
             {
