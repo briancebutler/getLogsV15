@@ -83,7 +83,7 @@ namespace getLogsV15
                 }
             }
 
-
+            //test
             string[] cmdArgs = inputArgs.Split('/');
 
 
