@@ -26,6 +26,7 @@ namespace getLogsV15
 
         static void Main(string[] args)
         {
+            Console.Title = "LOG FILES NEVER LIE!!!!!!!!";
             ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 45); //Resize window
             //Console.SetWindowSize(1, 1);
