@@ -5,18 +5,17 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Data.SQLite;
+using getLogsV15.Methods;
 
 
 namespace getLogsV15
 {
     class Program
     {
-        //Setting GetTempPath
         public static string GetTempPath()
         {
             string path = System.Environment.GetEnvironmentVariable("localappdata");
@@ -24,27 +23,8 @@ namespace getLogsV15
             return path;
         }
 
-        //Method to write to a log file "LogMessageToFile("TEXT" + variable);"
-        public static void LogMessageToFile(string msg)
 
-        {
-            System.IO.StreamWriter sw = new StreamWriter(GetTempPath() + "cvgetlog\\CVGetLogs.txt", true);
-
-            try
-            {
-                string logLine = System.String.Format("{0:G}: {1}.", System.DateTime.Now, msg);
-                sw.WriteLine(logLine);
-            }
-            finally
-            {
-                sw.Close();
-            }
-        }
-        
-
-
-
-            static void Main(string[] args)
+        static void Main(string[] args)
         {
             ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 45); //Resize window
@@ -52,6 +32,8 @@ namespace getLogsV15
             Console.SetBufferSize(85, 1024);
             //Console.SetWindowSize(40, 20);
             //Console.SetWindowPosition(0, 0);
+
+           
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
             string cvgetlog = path + "\\cvgetlog"; //path.combine("localappdata","cvgetlog")
@@ -59,19 +41,19 @@ namespace getLogsV15
             if (!Directory.Exists(cvgetlog))
             {
                 Directory.CreateDirectory(cvgetlog);
-                LogMessageToFile("INFO: CreateDirectory: " + cvgetlog);
+                LogInfoToFile.LogMessageToFile("INFO: CreateDirectory: " + cvgetlog);
             }
 
-            //LogMessageToFile("Info: Console.SetWindowSize(85,72)");
+            //LogInfoToFile.LogMessageToFile("Info: Console.SetWindowSize(85,72)");
 
-            LogMessageToFile("INFO: ################# STARTING CVGETLOGS #################");
+            LogInfoToFile.LogMessageToFile("INFO: ################# STARTING CVGETLOGS #################");
             string inputArgs = "cvgetlogs";
             string jobID;
 
             if (args == null)
             {
                 Console.WriteLine("No Customer info found");
-                LogMessageToFile("ERROR: No Customer info found.");
+                LogInfoToFile.LogMessageToFile("ERROR: No Customer info found.");
             }
             else
             {
@@ -79,14 +61,14 @@ namespace getLogsV15
                 {
                     string argument = args[i];
                     inputArgs = args[0];
-                    LogMessageToFile("INFO:" + args[0]);
+                    LogInfoToFile.LogMessageToFile("INFO:" + args[0]);
                 }
             }
 
             //test
             string[] cmdArgs = inputArgs.Split('/');
 
-
+            
 
             if (cmdArgs[5] == null)
             {
@@ -108,13 +90,13 @@ namespace getLogsV15
 
             if (File.Exists(iniPath))
             {
-                LogMessageToFile("INFO: File.Exists for: " + iniPath + " is valid: Continue");
+                LogInfoToFile.LogMessageToFile("INFO: File.Exists for: " + iniPath + " is valid: Continue");
             }
             else
             {
                 Console.WriteLine("######################################################################\n.\\inputfile.ini does not exist. \nThis file should be in the same directory as getLogs.exe\n\n\nCREATING INPUTFILE.INI with the default values below.\n\nFILE FORMAT:\n7zipPath=c:\\progra~1\\7-Zip\\7z.exe\nceLogPath=\\\\eng\\celogs\\\nlocalStagingDir=C:\\LogFiles\\\nextractDMP=false\n######################################################################\n\n");
-                LogMessageToFile("ERROR: File.Exists failed for iniPath " + iniPath);
-                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+                LogInfoToFile.LogMessageToFile("ERROR: File.Exists failed for iniPath " + iniPath);
+                LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
 
                 using (FileStream fs = File.Create(iniPath))
                 {
@@ -128,28 +110,28 @@ namespace getLogsV15
 
 
 
-            LogMessageToFile("####iniPath#### " + iniPath);
+            LogInfoToFile.LogMessageToFile("####iniPath#### " + iniPath);
             var dic = File.ReadAllLines(iniPath).Select(l => l.Split(new[] { '=' })).ToDictionary(s => s[0].Trim(), s => s[1].Trim());
             string zPath = dic["7zipPath"]; //OLD init - string zPath = "C:\\Program Files\\7-Zip\\7z.exe"; //7zip path.
-            LogMessageToFile("INFO_CFG: 7Zip path: " + zPath);
+            LogInfoToFile.LogMessageToFile("INFO_CFG: 7Zip path: " + zPath);
             string ceLogs = dic["ceLogPath"]; //OLD init - string ceLogs = "\\\\eng\\celogs\\"; 
-            LogMessageToFile("INFO_CFG: Customer log path: " + ceLogs);
+            LogInfoToFile.LogMessageToFile("INFO_CFG: Customer log path: " + ceLogs);
             string stagingDir = dic["localStagingDir"]; //OLD init - string stagingDir = "F:\\-LogFiles-\\";
-            LogMessageToFile("INFO_CFG: Local Staging directory: " + stagingDir);
+            LogInfoToFile.LogMessageToFile("INFO_CFG: Local Staging directory: " + stagingDir);
             string extractDMP = dic["extractDMP"];
-            LogMessageToFile("INFO_CFG: ExtractDMP: " + extractDMP);
+            LogInfoToFile.LogMessageToFile("INFO_CFG: ExtractDMP: " + extractDMP);
             string ftpUrl = dic["ftpUrl"];
             string ticketNumber = "\\" + cmdArgs[2]; //Not currenlty used other than to create folder structure.
-            LogMessageToFile("INFO: ticketNumber: " + ticketNumber);
+            LogInfoToFile.LogMessageToFile("INFO: ticketNumber: " + ticketNumber);
             string customerName = cmdArgs[4];
-            LogMessageToFile("INFO: customerName: " + customerName);
+            LogInfoToFile.LogMessageToFile("INFO: customerName: " + customerName);
             string CCID = cmdArgs[3]; //Customer commcell ID.
-            LogMessageToFile("INFO: CCID: " + CCID);
+            LogInfoToFile.LogMessageToFile("INFO: CCID: " + CCID);
             string fullLogPath = ceLogs + CCID; // Combines customer log path and commcell id to make valid path.
-            LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
+            LogInfoToFile.LogMessageToFile("INFO: fullLogPath: " + fullLogPath);
             string extractTo = stagingDir + customerName + ticketNumber;
             //string extractTo = stagingDir + customerName + "\\" + CCID + ticketNumber;
-            LogMessageToFile("INFO: extractTo: " + extractTo);
+            LogInfoToFile.LogMessageToFile("INFO: extractTo: " + extractTo);
             string engLogs = "\\\\eng\\escalationlogs";
             string stagePath = engLogs + "\\" + CCID + ticketNumber;
             List<string> zipFileList = new List<string>(); //List for file selecti;on
@@ -160,7 +142,7 @@ namespace getLogsV15
 
             List<string> dirFolderList4 = new List<string>(); //List for tar file selection
             string cmdPath = "C:\\Windows\\System32\\cmd.exe";
-            LogMessageToFile("INFO: cmdPath: " + cmdPath);
+            LogInfoToFile.LogMessageToFile("INFO: cmdPath: " + cmdPath);
             string localStagePath = GetTempPath() + "cvgetlog\\" + CCID;
             string fileList;// = "zipfilename";
             string parentZipFile;
@@ -201,14 +183,14 @@ namespace getLogsV15
                 string sql = "CREATE TABLE Incident (Name VARCHAR(50), CCID VARCHAR(6), Ticket VARCHAR(12), FolderSelected VARCHAR(255), zFile VARCHAR(255), zFolderSelected VARCHAR(255), DateTime VARCHAR(30), Active VARCHAR(3), Deleted VARCHAR(3))";
                 SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
                 command.ExecuteNonQuery();
-                LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
-                LogMessageToFile("INFO: SQLite Query: " + sql);
+                LogInfoToFile.LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
+                LogInfoToFile.LogMessageToFile("INFO: SQLite Query: " + sql);
                 //Console.WriteLine(path2);
             }
 
             //Open SQLite DB - Start
             SQLiteConnection m_dbConnection2;
-            LogMessageToFile("INFO: Database Opened: " + path2 + "\\" + sqlLiteDBFile);
+            LogInfoToFile.LogMessageToFile("INFO: Database Opened: " + path2 + "\\" + sqlLiteDBFile);
             m_dbConnection2 = new SQLiteConnection("Data Source=.\\sqlLiteDBFile.db;Version=3;");
             m_dbConnection2.Open();
             //Open SQLite DB - Done
@@ -217,21 +199,21 @@ namespace getLogsV15
             if (extractDMP == "false")
             {
                 excludeCSDB = " -x!*.dmp ";
-                LogMessageToFile("INFO: Extract DMP file? " + extractDMP);
+                LogInfoToFile.LogMessageToFile("INFO: Extract DMP file? " + extractDMP);
             }
 
             if (!Directory.Exists(extractTo))
             {
                 DirectoryInfo di = Directory.CreateDirectory(extractTo);
-                LogMessageToFile("INFO: extractTo was created " + extractTo);
+                LogInfoToFile.LogMessageToFile("INFO: extractTo was created " + extractTo);
             }
 
 
             if (!File.Exists(zPath))
             {
                 Console.WriteLine("\n\n\n####### 7zip does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", zPath);
-                LogMessageToFile("ERROR: File.Exists failed for zPath" + zPath);
-                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+                LogInfoToFile.LogMessageToFile("ERROR: File.Exists failed for zPath" + zPath);
+                LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                 Console.Read();
                 return;
             }
@@ -239,8 +221,8 @@ namespace getLogsV15
             if (!Directory.Exists(ceLogs))
             {
                 Console.WriteLine("\n\n\n####### Customer log path does not exist in in the following path. #######\n \t\t{0}\n\nPlease check the input file and correct the path.\nPress enter to exit.", ceLogs);
-                LogMessageToFile("ERROR: Directory.Exists failed for ceLogs: " + ceLogs);
-                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+                LogInfoToFile.LogMessageToFile("ERROR: Directory.Exists failed for ceLogs: " + ceLogs);
+                LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                 Console.Read();
                 return;
             }
@@ -249,8 +231,8 @@ namespace getLogsV15
             {
                 Console.WriteLine("######################################################################\nCreating the following directory to store your log files\nIf you wish to change this path please update the inputfile.ini file LocalStagingDir\nValue: " + stagingDir + "\n######################################################################\n\n");
                 DirectoryInfo di = Directory.CreateDirectory(stagingDir);
-                LogMessageToFile("CREATED: Directory.Exists failed for stagingDir: Creating new: " + stagingDir);
-                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+                LogInfoToFile.LogMessageToFile("CREATED: Directory.Exists failed for stagingDir: Creating new: " + stagingDir);
+                LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
             }
 
             recheckFullLogPath:
@@ -261,7 +243,7 @@ namespace getLogsV15
                 recheckFolder = Console.ReadLine();
                 if (recheckFolder == "y")
                 {
-                    LogMessageToFile("re-check log files selected");
+                    LogInfoToFile.LogMessageToFile("re-check log files selected");
                     goto recheckFullLogPath;
                 }
                 else if (recheckFolder == "c")
@@ -298,8 +280,8 @@ namespace getLogsV15
 
 
                 }
-                LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
-                LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+                LogInfoToFile.LogMessageToFile("ERROR: Directory.Exists failed for fullLogPath: " + fullLogPath);
+                LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                 return;
             }
 
@@ -310,7 +292,7 @@ namespace getLogsV15
                 if(dir.Contains(".00") || (dir.Contains(".zip") || (dir.Contains(".cab") || (dir.Contains(".bak")))))
                 {
                     Console.WriteLine("\n##### Additional file found #######\n{0}",dir + " \n" + File.GetCreationTime(dir));
-                    //LogMessageToFile("Found.001 file");
+                    //LogInfoToFile.LogMessageToFile("Found.001 file");
                     //Console.WriteLine(dir);
                 }
           
@@ -325,10 +307,10 @@ namespace getLogsV15
                 
                 Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [c]\n\nIf you would like to open {1} type [e]\n\nIf you would like to open {2} type [d]", fullLogPath, stagePath, extractTo);
                 recheckShare = Console.ReadLine();
-                LogMessageToFile("INFO: recheckShare " + recheckShare);
+                LogInfoToFile.LogMessageToFile("INFO: recheckShare " + recheckShare);
                 if (recheckShare == "y")
                 {
-                    LogMessageToFile("re-check log files selected");
+                    LogInfoToFile.LogMessageToFile("re-check log files selected");
                     goto recheck;
                 }
                 else if (recheckShare == "f")
@@ -358,7 +340,7 @@ namespace getLogsV15
                     if (!Directory.Exists(stagePath))
                     {
                         Directory.CreateDirectory(stagePath);
-                        LogMessageToFile("INFO: CreateDirectory: " + stagePath);
+                        LogInfoToFile.LogMessageToFile("INFO: CreateDirectory: " + stagePath);
                         Process.Start("explorer", stagePath);
                         return;
                     }
@@ -371,8 +353,8 @@ namespace getLogsV15
                 }
                 else
                 {
-                    LogMessageToFile("INFO: No uploads found in" + fullLogPath);
-                    LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
+                    LogInfoToFile.LogMessageToFile("INFO: No uploads found in" + fullLogPath);
+                    LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
                     //Console.Read();
                     return;
                 }
@@ -380,19 +362,19 @@ namespace getLogsV15
             }
             else
             {
-                LogMessageToFile("INFO: Uploads found in - " + fullLogPath + " Continuing");
+                LogInfoToFile.LogMessageToFile("INFO: Uploads found in - " + fullLogPath + " Continuing");
             }
 
             if (!Directory.Exists(localStagePath))
             {
                 DirectoryInfo di = Directory.CreateDirectory(localStagePath);
-                LogMessageToFile("INFO: localStagePath was created " + localStagePath);
+                LogInfoToFile.LogMessageToFile("INFO: localStagePath was created " + localStagePath);
             }
 
             //if (!Directory.Exists(extractTo))
             //{
             //    DirectoryInfo di = Directory.CreateDirectory(extractTo);
-            //    LogMessageToFile("INFO: extractTo was created " + extractTo);
+            //    LogInfoToFile.LogMessageToFile("INFO: extractTo was created " + extractTo);
             //}
 
 
@@ -405,7 +387,7 @@ namespace getLogsV15
 
             foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
             {
-                LogMessageToFile("INFO: List zip contents for File: " + dir);
+                LogInfoToFile.LogMessageToFile("INFO: List zip contents for File: " + dir);
                 FileInfo f = new FileInfo(dir);
                 Decimal s1 = f.Length / 1024 / 1024;
                 zipFileList.Add(dir); // Add each 7zip file to the list zipFileList
@@ -414,7 +396,7 @@ namespace getLogsV15
 
                 if (File.Exists(stageFile7z))
                 {
-                    LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
+                    LogInfoToFile.LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
                     Console.ForegroundColor = ConsoleColor.Green;
 
                     Console.Write("File:[{0}]", numlog++);
@@ -430,9 +412,9 @@ namespace getLogsV15
                 }
                 else
                 {
-                    LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
+                    LogInfoToFile.LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
                     pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
-                    LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
+                    LogInfoToFile.LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
                     Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
                     x.WaitForExit();
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -462,7 +444,7 @@ namespace getLogsV15
                                 //}
                                 else //need to convert to else if due to .zip files in source upload.
                                 {
-                                    //LogMessageToFile("INFO: " + line);
+                                    //LogInfoToFile.LogMessageToFile("INFO: " + line);
                                     Console.ForegroundColor = ConsoleColor.Cyan;
                                     Console.WriteLine("\tFile: " + line.Remove(0, 53));
                                     Console.ForegroundColor = defaultForeground;
@@ -481,7 +463,7 @@ namespace getLogsV15
                 {
                     Console.WriteLine("Detected an issue in the localStagePath deleting the following volume " + localStagePath + "\n Retrying the operation! Please dont fail!!");
                     Directory.Delete(localStagePath);
-                    LogMessageToFile("Deleted the following path due to staging issue" + localStagePath);
+                    LogInfoToFile.LogMessageToFile("Deleted the following path due to staging issue" + localStagePath);
                     goto Retry;
                 }
 
@@ -538,7 +520,7 @@ namespace getLogsV15
                 if (!Directory.Exists(stagePath))
                 {
                     Directory.CreateDirectory(stagePath);
-                    LogMessageToFile("INFO: CreateDirectory: " + stagePath);
+                    LogInfoToFile.LogMessageToFile("INFO: CreateDirectory: " + stagePath);
                     Process.Start("explorer", stagePath);
                     return;
                 }
@@ -552,10 +534,10 @@ namespace getLogsV15
             Console.WriteLine("You Selected: " + numlog);
             Console.WriteLine("File Selected: " + zipFileList[numlog]);
             var stopWatch = Stopwatch.StartNew();
-            LogMessageToFile("INFO: Log file selected " + zipFileList[numlog]);
+            LogInfoToFile.LogMessageToFile("INFO: Log file selected " + zipFileList[numlog]);
 
             parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
-            LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
+            LogInfoToFile.LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
             File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
 
             try
@@ -571,25 +553,25 @@ namespace getLogsV15
                 // Insert Into SQLite - Start
                 //string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
                 string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, zFile, zFolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + extractPathWithoutExt + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
-                LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
+                LogInfoToFile.LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
                 //Console.Read();
                 SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
                 command2.ExecuteNonQuery();
                 // Insert Into SQLite - End
 
-                LogMessageToFile("INFO: extractTo" + extractTo);
+                LogInfoToFile.LogMessageToFile("INFO: extractTo" + extractTo);
 
                 pro.Arguments = string.Format("x \"{0}\" -y -r {2}-o\"{1}\"", extractParentZip, extractTo + "\\*", excludeCSDB);    // extracts the 7z file found in the foreach above.
 
                 parentZipFile = Path.GetFileNameWithoutExtension(zipFileList[numlog]);
                 parentFilePath = extractTo + "\\" + parentZipFile;
                 Process x = Process.Start(pro);
-                LogMessageToFile("INFO: Extracting root zip: 7z.exe " + pro.Arguments);
+                LogInfoToFile.LogMessageToFile("INFO: Extracting root zip: 7z.exe " + pro.Arguments);
                 x.WaitForExit();
 
                 if (Directory.Exists(parentFilePath))
                 {
-                    LogMessageToFile("INFO: File is complete continuing with subfile extraction:");
+                    LogInfoToFile.LogMessageToFile("INFO: File is complete continuing with subfile extraction:");
 
                     foreach (string subfile1 in Directory.GetFiles(parentFilePath).Where(file => fileExt.Any(file.ToLower().EndsWith)).ToList())
                     {
@@ -600,14 +582,14 @@ namespace getLogsV15
                         else if (subfile1.Contains(".7z"))
                         {
                             zipFileList2.Add(subfile1); // Add each 7zip file to the list zipFileList
-                            LogMessageToFile("INFO: zipFileList2 item added to list" + zipFileList2);
+                            LogInfoToFile.LogMessageToFile("INFO: zipFileList2 item added to list" + zipFileList2);
                         }
                         else if (subfile1.Contains(".gz"))
                         {
 
                             //Console.WriteLine("Still working on extraction for .tar.gz files\n{0}", subfile1);
                             zipFileList3.Add(subfile1);
-                            LogMessageToFile("INFO: zipFileList3 item added to list" + zipFileList3);
+                            LogInfoToFile.LogMessageToFile("INFO: zipFileList3 item added to list" + zipFileList3);
 
                         }
                         else if (subfile1.Contains(".tar"))
@@ -625,7 +607,7 @@ namespace getLogsV15
                 else
                 {
                     Console.WriteLine("Cab files is not done downloading: Returning to log selection menu. Try again!");
-                    LogMessageToFile("INFO: Cab files is not done downloading: Returning to log selection menu. Try again!");
+                    LogInfoToFile.LogMessageToFile("INFO: Cab files is not done downloading: Returning to log selection menu. Try again!");
                     goto Retry;
                 }
 
@@ -639,9 +621,9 @@ namespace getLogsV15
                     //Console.WriteLine("\nExtracting...\n" + currentFile);
                     pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, parentFilePath + "\\*");    // extracts the 7z file found in the foreach above.
                     Process z = Process.Start(pro);
-                    //LogMessageToFile("INFO: Extracting parent zips: 7z.exe " + pro.Arguments);
+                    //LogInfoToFile.LogMessageToFile("INFO: Extracting parent zips: 7z.exe " + pro.Arguments);
                     z.WaitForExit();
-                    //LogMessageToFile("DELETE: Filename to delete: " + currentFile);
+                    //LogInfoToFile.LogMessageToFile("DELETE: Filename to delete: " + currentFile);
 
                     for (int i = 1; i <= NumberOfRetries; ++i)
                     {
@@ -695,8 +677,8 @@ namespace getLogsV15
                         }
                     }
 
-                    LogMessageToFile("DELETE " + currentFile);
-                    LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
+                    LogInfoToFile.LogMessageToFile("DELETE " + currentFile);
+                    LogInfoToFile.LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
 
                     //7z x -so nc2plcvma01_logs.tar.gz | 7z x -si -ttar -onc2plcvma01
                 });
@@ -717,8 +699,8 @@ namespace getLogsV15
                         {
                             zipFileList4.Add(file);
                             dirFolderList4.Add(dir);
-                            LogMessageToFile("dirFolderList4 " + dirFolderList4[numFolder4++]);
-                            LogMessageToFile("zipFileList4 " + zipFileList4[numFile4++]);
+                            LogInfoToFile.LogMessageToFile("dirFolderList4 " + dirFolderList4[numFolder4++]);
+                            LogInfoToFile.LogMessageToFile("zipFileList4 " + zipFileList4[numFile4++]);
                         }
                         else if(file.Contains(".zip"))
                         {
@@ -787,10 +769,10 @@ namespace getLogsV15
                 });
 
 
-                LogMessageToFile("INFO: Opening folder " + parentFilePath);
+                LogInfoToFile.LogMessageToFile("INFO: Opening folder " + parentFilePath);
                 Process.Start("explorer", parentFilePath);
-                LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
-                LogMessageToFile("INFO: ################# EXITING CVGETLOGS #################");
+                LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
+                LogInfoToFile.LogMessageToFile("INFO: ################# EXITING CVGETLOGS #################");
                 //Console.Read();
 
                 return;
@@ -805,8 +787,8 @@ namespace getLogsV15
             }
             finally { }
 
-            LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
-            LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
+            LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
+            LogInfoToFile.LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
             Console.Read();
 
         }
