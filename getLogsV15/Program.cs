@@ -291,7 +291,7 @@ namespace getLogsV15
             Console.ForegroundColor = ConsoleColor.Red;
             foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
             {
-                if(dir.Contains(".00") || (dir.Contains(".zip") || (dir.Contains(".cab") || (dir.Contains(".bak")))))
+                if((dir.Contains(".zip") || (dir.Contains(".cab") || (dir.Contains(".bak")))))
                 {
                     Console.WriteLine("\n##### Additional file found #######\n{0}",dir + " \n" + File.GetCreationTime(dir));
                     //LogInfoToFile.LogMessageToFile("Found.001 file");
@@ -614,7 +614,7 @@ namespace getLogsV15
 
                 //});
 
-                Console.WriteLine("Breaking");
+                //Console.WriteLine("Breaking");
                 //goto QUIT;
                 //System.Threading.Thread.Sleep(1000);
             }
@@ -655,15 +655,15 @@ namespace getLogsV15
                 if (parentFilePath.EndsWith(".7z"))
                     {
                     parentFilePath = extractTo + "\\" + Path.GetFileNameWithoutExtension(parentFilePath);
-                    Console.WriteLine("Found extra data");
-                    Console.WriteLine("parentFilePath " + parentFilePath);
+                    //Console.WriteLine("Found extra data");
+                    //Console.WriteLine("parentFilePath " + parentFilePath);
                 }
 
                 Process x = Process.Start(pro);
                 LogInfoToFile.LogMessageToFile("INFO: Extracting root zip: 7z.exe " + pro.Arguments);
                 LogInfoToFile.LogMessageToFile("ParentFilePath" + parentFilePath);
                 x.WaitForExit();
-                Console.WriteLine(parentFilePath);
+                //Console.WriteLine(parentFilePath);
                 if (Directory.Exists(parentFilePath))
                 {
                     LogInfoToFile.LogMessageToFile("INFO: File is complete continuing with subfile extraction:");
