@@ -140,6 +140,7 @@ namespace getLogsV15
             List<string> zipFileList3 = new List<string>(); //List for tar file selection
             List<string> zipFileList4 = new List<string>(); //List for tar file selection
             List<string> zipFileList5 = new List<string>(); //List for .zip file selection
+            List<string> zipMultiPart = new List<string>(); //List for .zip file selection
 
             List<string> dirFolderList4 = new List<string>(); //List for tar file selection
             string cmdPath = "C:\\Windows\\System32\\cmd.exe";
@@ -302,8 +303,12 @@ namespace getLogsV15
             //Console.WriteLine("");
             Console.ForegroundColor = defaultForeground;
 
-            recheck:
-            if (Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).Length == 0)
+
+
+
+        //"*.001"
+        recheck:
+            if (Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).Length == 0)
             {
                 
                 Console.WriteLine("\nNo uploads were found for this customer.\n\nWould you like to re-check the share [y/n]\n\nIf you want to open qnftp01 enter [f]\n\nIf you would like to open {0} type [c]\n\nIf you would like to open {1} type [e]\n\nIf you would like to open {2} type [d]", fullLogPath, stagePath, extractTo);
@@ -386,88 +391,107 @@ namespace getLogsV15
             pro.FileName = cmdPath; //Added for extraction of zip file contents to extract server name per top level cab.
 
 
-            foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.7z", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
+            foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
             {
-                LogInfoToFile.LogMessageToFile("INFO: List zip contents for File: " + dir);
-                FileInfo f = new FileInfo(dir);
-                Decimal s1 = f.Length / 1024 / 1024;
-                zipFileList.Add(dir); // Add each 7zip file to the list zipFileList
-                fileList = Path.GetFileNameWithoutExtension(dir);
-                string stageFile7z = localStagePath + "\\" + fileList + numlog22++ + ".txt";
 
-                if (File.Exists(stageFile7z))
+
+                if (dir.EndsWith(".7z.001") || dir.EndsWith(".7z"))
                 {
-                    LogInfoToFile.LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    LogInfoToFile.LogMessageToFile("INFO: List zip contents for File: " + dir);
+                    FileInfo f = new FileInfo(dir);
+                    Decimal s1 = f.Length / 1024 / 1024;
 
-                    Console.Write("File:[{0}]", numlog++);
-                    //Console.ForegroundColor = defaultForeground;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("\tSize: [{0} MB]", s1);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("\tCreated on: {0}", File.GetCreationTime(dir));
-                    Console.ForegroundColor = defaultForeground;
-                    Console.WriteLine("\n {0}", dir);
-                    //Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                    zipFileList.Add(dir); // Add each 7zip file to the list zipFileList
+
+                    fileList = Path.GetFileNameWithoutExtension(dir);
+                    string stageFile7z = localStagePath + "\\" + fileList + numlog22++ + ".txt";
+
+                    if (File.Exists(stageFile7z))
+                    {
+                        LogInfoToFile.LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
+                        Console.ForegroundColor = ConsoleColor.Green;
+
+                        Console.Write("File:[{0}]", numlog++);
+                        //Console.ForegroundColor = defaultForeground;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\tSize: [{0} MB]", s1);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("\tCreated on: {0}", File.GetCreationTime(dir));
+                        Console.ForegroundColor = defaultForeground;
+                        Console.WriteLine("\n {0}", dir);
+                        //Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+
+                    }
+                    else
+                    {
+                        LogInfoToFile.LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
+                        pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
+                        LogInfoToFile.LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
+                        Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
+                        x.WaitForExit();
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
+                        Console.ForegroundColor = defaultForeground;
+                    }
+
+
+
+
+                    try
+                    {
+                        using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
+
+                        {
+                            string line;
+                            while ((line = r.ReadLine()) != null)
+                            {
+                                Match m = g.Match(line);
+                                if (m.Success)
+                                {
+                                    if (line.Contains("celogs") == true) //This is used to skip regex search for files that contain celogs in the path.
+                                    {
+                                        //Console.WriteLine("not here");
+                                    }
+                                    else if (line.Contains("Path") == true) //in the case of multi part zip files it will exclude these files from being listed. 
+                                    {
+
+                                    }
+                                    //else if (line.Contains("Type = zip") == true) // Logic to collect .zip files also. Currently broken.
+                                    //{
+                                    //numfile3 = numfile3 -1;
+                                    //Console.WriteLine("\tNo Machine Info found");
+                                    //}
+                                    else //need to convert to else if due to .zip files in source upload.
+                                    {
+                                        //LogInfoToFile.LogMessageToFile("INFO: " + line);
+                                        Console.ForegroundColor = ConsoleColor.Cyan;
+                                        Console.WriteLine("\tFile: " + line.Remove(0, 53));
+                                        Console.ForegroundColor = defaultForeground;
+                                    }
+
+                                }
+
+                                //else
+                                //{
+                                //    //Console.WriteLine(line);
+                                //}
+                            }
+                        }
+                    }
+                    catch (System.IO.FileNotFoundException)
+                    {
+                        Console.WriteLine("Detected an issue in the localStagePath deleting the following volume " + localStagePath + "\n Retrying the operation! Please dont fail!!");
+                        Directory.Delete(localStagePath);
+                        LogInfoToFile.LogMessageToFile("Deleted the following path due to staging issue" + localStagePath);
+                        goto Retry;
+                    }
+
 
                 }
                 else
                 {
-                    LogInfoToFile.LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
-                    pro.Arguments = string.Format("/c {3} L \"{0}\" -r >{1}\\{2}.txt\"", dir, localStagePath, fileList + numlog2++, zPath);    // extracts the contents of the 7 zip file.
-                    LogInfoToFile.LogMessageToFile("INFO: List zip contents: cmd.exe " + pro.Arguments);
-                    Process x = Process.Start(pro); //Added for extraction of zip file contents to extract server name per top level cab.
-                    x.WaitForExit();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-                    Console.ForegroundColor = defaultForeground;
+                    //Console.WriteLine(dir);
                 }
-
-                try
-                {
-                    using (StreamReader r = new StreamReader(localStagePath + "\\" + fileList + numfile3++ + ".txt"))
-
-                    {
-                        string line;
-                        while ((line = r.ReadLine()) != null)
-                        {
-                            Match m = g.Match(line);
-                            if (m.Success)
-                            {
-                                if (line.Contains("celogs") == true) //This is used to skip regex search for files that contain celogs in the path.
-                                {
-                                    //Console.WriteLine("not here");
-                                }
-                                //else if (line.Contains("Type = zip") == true) // Logic to collect .zip files also. Currently broken.
-                                //{
-                                //numfile3 = numfile3 -1;
-                                //Console.WriteLine("\tNo Machine Info found");
-                                //}
-                                else //need to convert to else if due to .zip files in source upload.
-                                {
-                                    //LogInfoToFile.LogMessageToFile("INFO: " + line);
-                                    Console.ForegroundColor = ConsoleColor.Cyan;
-                                    Console.WriteLine("\tFile: " + line.Remove(0, 53));
-                                    Console.ForegroundColor = defaultForeground;
-                                }
-
-                            }
-
-                            //else
-                            //{
-                            //    //Console.WriteLine(line);
-                            //}
-                        }
-                    }
-                }
-                catch (System.IO.FileNotFoundException)
-                {
-                    Console.WriteLine("Detected an issue in the localStagePath deleting the following volume " + localStagePath + "\n Retrying the operation! Please dont fail!!");
-                    Directory.Delete(localStagePath);
-                    LogInfoToFile.LogMessageToFile("Deleted the following path due to staging issue" + localStagePath);
-                    goto Retry;
-                }
-
                 Console.WriteLine(" ");
 
             }
@@ -539,10 +563,71 @@ namespace getLogsV15
 
             parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
             LogInfoToFile.LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
-            File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
+            //Console.WriteLine(Path.GetFileNameWithoutExtension(zipFileList[numlog]));
+
+            
+
+            if (zipFileList[numlog].EndsWith(".001"))
+            {
+                string multiPartZip001 = Path.GetFileNameWithoutExtension(zipFileList[numlog]);
+                string multiPartZip7z = Path.GetFileNameWithoutExtension(multiPartZip001);
+
+                //if (Directory.GetFiles(fullLogPath.EndsWith(multiPartZip7z)))
+                //{
+                //    Console.Write("Helloe " + path);
+                //}
+                //Console.WriteLine("skipping copy of " + multiPartZip001);
+                //Console.WriteLine("skipping copy of " + multiPartZip7z);
+
+                //foreach(string file in Directory.GetFiles(fullLogPath))
+                foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
+                    {
+                    if (dir.Contains(multiPartZip7z))
+                    {
+                        zipMultiPart.Add(dir);
+
+                        //Console.WriteLine("hello " + dir);
+
+                        //string onlyFileName = Path.GetFileName(dir);
+                        //File.Copy(dir, Path.Combine(extractTo, onlyFileName), true);
+
+                        //foreach(string file in zipMultiPart)
+                        //{
+                        //    Console.WriteLine(file);
+                        //    //File.Copy(file, Path.Combine(extractTo, parentZipFileExt), true);
+                        //}
+                    }
+                }
+
+                foreach (string dir in zipMultiPart)
+                {
+                    string onlyFileName = Path.GetFileName(dir);
+                    File.Copy(dir, Path.Combine(extractTo, onlyFileName), true);
+
+                }
+
+                //Parallel.ForEach(zipMultiPart, (currentFile) =>
+                //{
+                //    Console.WriteLine("Copying File " + currentFile);
+                //    string onlyFileName = Path.GetFileName(currentFile);
+                //    File.Copy(currentFile, Path.Combine(extractTo, onlyFileName), true);
+
+                //});
+
+                Console.WriteLine("Breaking");
+                //goto QUIT;
+                //System.Threading.Thread.Sleep(1000);
+            }
+            
+            else
+            {
+                File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
+            }
+            
 
             try
             {
+                //System.Threading.Thread.Sleep(15000);
                 parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
                 string extractParentZip;
                 extractParentZip = extractTo + "\\" + parentZipFileExt;
@@ -566,10 +651,19 @@ namespace getLogsV15
 
                 parentZipFile = Path.GetFileNameWithoutExtension(zipFileList[numlog]);
                 parentFilePath = extractTo + "\\" + parentZipFile;
+
+                if (parentFilePath.EndsWith(".7z"))
+                    {
+                    parentFilePath = extractTo + "\\" + Path.GetFileNameWithoutExtension(parentFilePath);
+                    Console.WriteLine("Found extra data");
+                    Console.WriteLine("parentFilePath " + parentFilePath);
+                }
+
                 Process x = Process.Start(pro);
                 LogInfoToFile.LogMessageToFile("INFO: Extracting root zip: 7z.exe " + pro.Arguments);
+                LogInfoToFile.LogMessageToFile("ParentFilePath" + parentFilePath);
                 x.WaitForExit();
-
+                Console.WriteLine(parentFilePath);
                 if (Directory.Exists(parentFilePath))
                 {
                     LogInfoToFile.LogMessageToFile("INFO: File is complete continuing with subfile extraction:");
@@ -607,9 +701,10 @@ namespace getLogsV15
                 }
                 else
                 {
+                    Console.ReadLine();
                     Console.WriteLine("Cab files is not done downloading: Returning to log selection menu. Try again!");
                     LogInfoToFile.LogMessageToFile("INFO: Cab files is not done downloading: Returning to log selection menu. Try again!");
-                    goto Retry;
+                    //goto Retry;
                 }
 
 
@@ -688,7 +783,7 @@ namespace getLogsV15
                 pro.FileName = zPath;
 
                 string[] dirs = Directory.GetDirectories(parentFilePath, "*", SearchOption.TopDirectoryOnly);
-
+                
 
                 foreach (string dir in dirs)
                 {
@@ -787,10 +882,12 @@ namespace getLogsV15
 
             }
             finally { }
+            QUIT:
 
             LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
             LogInfoToFile.LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
             Console.Read();
+
 
         }
     }
