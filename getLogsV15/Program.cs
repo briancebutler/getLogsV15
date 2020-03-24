@@ -798,11 +798,3 @@ namespace getLogsV15
         }
     }
 }
-
-
-
-//##### Project list:
-//Add support for .zip files.
-//FIX multiple access to log file.
-
-
