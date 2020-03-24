@@ -377,11 +377,6 @@ namespace getLogsV15
                 LogInfoToFile.LogMessageToFile("INFO: localStagePath was created " + localStagePath);
             }
 
-            //if (!Directory.Exists(extractTo))
-            //{
-            //    DirectoryInfo di = Directory.CreateDirectory(extractTo);
-            //    LogInfoToFile.LogMessageToFile("INFO: extractTo was created " + extractTo);
-            //}
 
 
             Regex g = new Regex(@"\w+\.7z|.gz|.dmp|.zip|.tar"); //search 7z extracted cabs to find files inside.
@@ -456,25 +451,14 @@ namespace getLogsV15
                                     {
 
                                     }
-                                    //else if (line.Contains("Type = zip") == true) // Logic to collect .zip files also. Currently broken.
-                                    //{
-                                    //numfile3 = numfile3 -1;
-                                    //Console.WriteLine("\tNo Machine Info found");
-                                    //}
+
                                     else //need to convert to else if due to .zip files in source upload.
                                     {
-                                        //LogInfoToFile.LogMessageToFile("INFO: " + line);
                                         Console.ForegroundColor = ConsoleColor.Cyan;
                                         Console.WriteLine("\tFile: " + line.Remove(0, 53));
                                         Console.ForegroundColor = defaultForeground;
                                     }
-
                                 }
-
-                                //else
-                                //{
-                                //    //Console.WriteLine(line);
-                                //}
                             }
                         }
                     }
@@ -563,8 +547,6 @@ namespace getLogsV15
 
             parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
             LogInfoToFile.LogMessageToFile("INFO: Copy file from log share: " + zipFileList[numlog]);
-            //Console.WriteLine(Path.GetFileNameWithoutExtension(zipFileList[numlog]));
-
             
 
             if (zipFileList[numlog].EndsWith(".001"))
@@ -572,30 +554,12 @@ namespace getLogsV15
                 string multiPartZip001 = Path.GetFileNameWithoutExtension(zipFileList[numlog]);
                 string multiPartZip7z = Path.GetFileNameWithoutExtension(multiPartZip001);
 
-                //if (Directory.GetFiles(fullLogPath.EndsWith(multiPartZip7z)))
-                //{
-                //    Console.Write("Helloe " + path);
-                //}
-                //Console.WriteLine("skipping copy of " + multiPartZip001);
-                //Console.WriteLine("skipping copy of " + multiPartZip7z);
-
-                //foreach(string file in Directory.GetFiles(fullLogPath))
                 foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
                     {
-                    if (dir.Contains(multiPartZip7z))
+
+                        if (dir.Contains(multiPartZip7z))
                     {
                         zipMultiPart.Add(dir);
-
-                        //Console.WriteLine("hello " + dir);
-
-                        //string onlyFileName = Path.GetFileName(dir);
-                        //File.Copy(dir, Path.Combine(extractTo, onlyFileName), true);
-
-                        //foreach(string file in zipMultiPart)
-                        //{
-                        //    Console.WriteLine(file);
-                        //    //File.Copy(file, Path.Combine(extractTo, parentZipFileExt), true);
-                        //}
                     }
                 }
 
@@ -606,17 +570,17 @@ namespace getLogsV15
 
                 }
 
+                //This would replace the extraction happening in the foreach loop above. When working remotly the connection cannot handle the parallel operation.
+
                 //Parallel.ForEach(zipMultiPart, (currentFile) =>
                 //{
                 //    Console.WriteLine("Copying File " + currentFile);
                 //    string onlyFileName = Path.GetFileName(currentFile);
                 //    File.Copy(currentFile, Path.Combine(extractTo, onlyFileName), true);
-
                 //});
 
-                //Console.WriteLine("Breaking");
+
                 //goto QUIT;
-                //System.Threading.Thread.Sleep(1000);
             }
             
             else
@@ -627,7 +591,6 @@ namespace getLogsV15
 
             try
             {
-                //System.Threading.Thread.Sleep(15000);
                 parentZipFileExt = Path.GetFileName(zipFileList[numlog]);
                 string extractParentZip;
                 extractParentZip = extractTo + "\\" + parentZipFileExt;
@@ -637,33 +600,27 @@ namespace getLogsV15
                 string statusActive = "YES";
                 string statusDeleted = "NO";
                 // Insert Into SQLite - Start
-                //string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
                 string sqlQuery = "insert into Incident (Name, CCID, Ticket, FolderSelected, zFile, zFolderSelected, DateTime, Active, Deleted) values('" + customerName + "'" + "," + "'" + CCID + "'" + "," + "'" + ticketNumber.TrimStart('\\') + "'" + "," + "'" + extractTo + "'" + "," + "'" + extractParentZip + "'" + "," + "'" + extractPathWithoutExt + "'" + "," + "'" + time + "'" + "," + "'" + statusActive + "'" + "," + "'" + statusDeleted + "')";
                 LogInfoToFile.LogMessageToFile("INFO: SQLite Query: " + sqlQuery);
-                //Console.Read();
                 SQLiteCommand command2 = new SQLiteCommand(sqlQuery, m_dbConnection2);
                 command2.ExecuteNonQuery();
                 // Insert Into SQLite - End
 
                 LogInfoToFile.LogMessageToFile("INFO: extractTo" + extractTo);
-
                 pro.Arguments = string.Format("x \"{0}\" -y -r {2}-o\"{1}\"", extractParentZip, extractTo + "\\*", excludeCSDB);    // extracts the 7z file found in the foreach above.
-
                 parentZipFile = Path.GetFileNameWithoutExtension(zipFileList[numlog]);
                 parentFilePath = extractTo + "\\" + parentZipFile;
 
                 if (parentFilePath.EndsWith(".7z"))
-                    {
+                {
                     parentFilePath = extractTo + "\\" + Path.GetFileNameWithoutExtension(parentFilePath);
-                    //Console.WriteLine("Found extra data");
-                    //Console.WriteLine("parentFilePath " + parentFilePath);
                 }
 
                 Process x = Process.Start(pro);
                 LogInfoToFile.LogMessageToFile("INFO: Extracting root zip: 7z.exe " + pro.Arguments);
                 LogInfoToFile.LogMessageToFile("ParentFilePath" + parentFilePath);
                 x.WaitForExit();
-                //Console.WriteLine(parentFilePath);
+
                 if (Directory.Exists(parentFilePath))
                 {
                     LogInfoToFile.LogMessageToFile("INFO: File is complete continuing with subfile extraction:");
@@ -679,26 +636,20 @@ namespace getLogsV15
                             zipFileList2.Add(subfile1); // Add each 7zip file to the list zipFileList
                             LogInfoToFile.LogMessageToFile("INFO: zipFileList2 item added to list" + zipFileList2);
                         }
+
                         else if (subfile1.Contains(".gz"))
                         {
-
-                            //Console.WriteLine("Still working on extraction for .tar.gz files\n{0}", subfile1);
                             zipFileList3.Add(subfile1);
                             LogInfoToFile.LogMessageToFile("INFO: zipFileList3 item added to list" + zipFileList3);
-
                         }
+
                         else if (subfile1.Contains(".tar"))
                         {
                             zipFileList2.Add(subfile1);
                         }
-                        //else if (subfile1.Contains(".zip"))
-                        //{
-                        //    zipFileList5.Add(subfile1);
-                        //}
-
                     }
-
                 }
+
                 else
                 {
                     Console.ReadLine();
@@ -714,12 +665,9 @@ namespace getLogsV15
 
                 Parallel.ForEach(zipFileList2, (currentFile) =>
                 {
-                    //Console.WriteLine("\nExtracting...\n" + currentFile);
                     pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, parentFilePath + "\\*");    // extracts the 7z file found in the foreach above.
                     Process z = Process.Start(pro);
-                    //LogInfoToFile.LogMessageToFile("INFO: Extracting parent zips: 7z.exe " + pro.Arguments);
                     z.WaitForExit();
-                    //LogInfoToFile.LogMessageToFile("DELETE: Filename to delete: " + currentFile);
 
                     for (int i = 1; i <= NumberOfRetries; ++i)
                     {
@@ -749,15 +697,12 @@ namespace getLogsV15
 
                     string result;
                     result = Path.GetFileNameWithoutExtension(currentFile);
-                    //Console.WriteLine("\nExtracting...\n" + currentFile);
                     string sub7zipArg;
                     sub7zipArg = "x -si -ttar -o";
                     string top7zipArg;
                     top7zipArg = "/c c:\\progra~1\\7-Zip\\7z.exe x -so ";
                     pro.Arguments = string.Format("{4}\"{0}\" | \"{2}\" {3}\"{1}\"", currentFile, parentFilePath + "\\" + result + "\\", zPath, sub7zipArg, top7zipArg);
                     Process z = Process.Start(pro);
-                    //Console.WriteLine(pro.Arguments);
-                    //Console.Read();
                     z.WaitForExit();
 
                     for (int i = 1; i <= NumberOfRetries; ++i)
@@ -776,7 +721,6 @@ namespace getLogsV15
                     LogInfoToFile.LogMessageToFile("DELETE " + currentFile);
                     LogInfoToFile.LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
 
-                    //7z x -so nc2plcvma01_logs.tar.gz | 7z x -si -ttar -onc2plcvma01
                 });
 
 
@@ -787,10 +731,8 @@ namespace getLogsV15
 
                 foreach (string dir in dirs)
                 {
-
-                    //foreach (string file in Directory.GetFileSystemEntries(dir, "*.7z"))
                     foreach (string file in Directory.GetFileSystemEntries(dir))
-                        {
+                    {
                         if (file.Contains(".7z"))
                         {
                             zipFileList4.Add(file);
@@ -798,16 +740,16 @@ namespace getLogsV15
                             LogInfoToFile.LogMessageToFile("dirFolderList4 " + dirFolderList4[numFolder4++]);
                             LogInfoToFile.LogMessageToFile("zipFileList4 " + zipFileList4[numFile4++]);
                         }
+
                         else if(file.Contains(".zip"))
                         {
                             zipFileList5.Add(file);
                         }
-
-
                     }
                 }
                 int zfilecount4 = zipFileList4.Count;
                 Console.WriteLine("Working on {0} sub directory .7z files", zfilecount4);
+                
                 Parallel.ForEach(zipFileList4, (currentFile) =>
                 {
 
@@ -815,7 +757,6 @@ namespace getLogsV15
                 outputFolder = Path.GetDirectoryName(currentFile);
                 pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder + "\\*");    // extracts the 7z file found in the foreach above.
                 Process z = Process.Start(pro);
-                //Console.WriteLine("Extracting: " + currentFile);
                 z.WaitForExit();
 
                     for (int i=1; i <= NumberOfRetries; ++i) 
@@ -844,8 +785,6 @@ namespace getLogsV15
                     outputFolder = Path.GetDirectoryName(currentFile);
                     pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder);    // extracts the 7z file found in the foreach above.
                     Process z = Process.Start(pro);
-                    //Console.WriteLine(pro.Arguments);
-                    //Console.WriteLine("Extracting: " + currentFile);
                     z.WaitForExit();
 
                     for (int i = 1; i <= NumberOfRetries; ++i)
@@ -869,7 +808,6 @@ namespace getLogsV15
                 Process.Start("explorer", parentFilePath);
                 LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
                 LogInfoToFile.LogMessageToFile("INFO: ################# EXITING CVGETLOGS #################");
-                //Console.Read();
 
                 return;
 
@@ -882,7 +820,6 @@ namespace getLogsV15
 
             }
             finally { }
-            QUIT:
 
             LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
             LogInfoToFile.LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
