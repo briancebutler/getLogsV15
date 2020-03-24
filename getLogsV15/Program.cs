@@ -154,7 +154,7 @@ namespace getLogsV15
             int NumberOfRetries = 3;
             int DelayOnRetry = 1000;
 
-            var fileExt = new[] { ".7z", ".gz", ".tar" };
+            var fileExt = new[] { ".7z", ".gz", ".tar", ".zip" };
 
             var time = DateTime.Now;
 
@@ -269,7 +269,7 @@ namespace getLogsV15
             Console.ForegroundColor = ConsoleColor.Red;
             foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
             {
-                if((dir.Contains(".zip") || (dir.Contains(".cab") || (dir.Contains(".bak")))))
+                if((dir.Contains(".cab") || (dir.Contains(".bak"))))
                 {
                     Console.WriteLine("\n##### Additional file found #######\n{0}",dir + " \n" + File.GetCreationTime(dir));
                 }
@@ -361,7 +361,7 @@ namespace getLogsV15
             {
 
 
-                if (dir.EndsWith(".7z.001") || dir.EndsWith(".7z"))
+                if (dir.EndsWith(".7z.001") || dir.EndsWith(".7z") || dir.EndsWith(".zip"))
                 {
                     LogInfoToFile.LogMessageToFile("INFO: List zip contents for File: " + dir);
                     FileInfo f = new FileInfo(dir);
@@ -413,6 +413,10 @@ namespace getLogsV15
                                         //Console.WriteLine("not here");
                                     }
                                     else if (line.Contains("Path") == true) //in the case of multi part zip files it will exclude these files from being listed. 
+                                    {
+
+                                    }
+                                    else if (line.Contains("Listing archive") == true || (line.Contains("Type = zip") == true))
                                     {
 
                                     }
@@ -592,7 +596,7 @@ namespace getLogsV15
                         if (subfile1.Contains("SQL_ERROR_LOGS"))
                         {
                         }
-                        else if (subfile1.Contains(".7z"))
+                        else if (subfile1.Contains(".7z")|| (subfile1.Contains(".zip")))
                         {
                             zipFileList2.Add(subfile1); // Add each 7zip file to the list zipFileList
                             LogInfoToFile.LogMessageToFile("INFO: zipFileList2 item added to list" + zipFileList2);
@@ -619,7 +623,7 @@ namespace getLogsV15
                 }
 
                 int zfilecount2 = zipFileList2.Count;
-                Console.WriteLine("\nWorking on {0} parent .7z files", zfilecount2);
+                Console.WriteLine("\nWorking on {0} parent .7z/.zip files", zfilecount2);
 
                 Parallel.ForEach(zipFileList2, (currentFile) =>
                 {
