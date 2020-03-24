@@ -29,10 +29,8 @@ namespace getLogsV15
             Console.Title = "LOG FILES NEVER LIE!!!!!!!!";
             ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 45); //Resize window
-            //Console.SetWindowSize(1, 1);
             Console.SetBufferSize(85, 1024);
-            //Console.SetWindowSize(40, 20);
-            //Console.SetWindowPosition(0, 0);
+
 
            
             Retry:
@@ -44,8 +42,6 @@ namespace getLogsV15
                 Directory.CreateDirectory(cvgetlog);
                 LogInfoToFile.LogMessageToFile("INFO: CreateDirectory: " + cvgetlog);
             }
-
-            //LogInfoToFile.LogMessageToFile("Info: Console.SetWindowSize(85,72)");
 
             LogInfoToFile.LogMessageToFile("INFO: ################# STARTING CVGETLOGS #################");
             string inputArgs = "cvgetlogs";
@@ -66,7 +62,6 @@ namespace getLogsV15
                 }
             }
 
-            //test
             string[] cmdArgs = inputArgs.Split('/');
 
             
@@ -78,9 +73,6 @@ namespace getLogsV15
             else
             {
                 jobID = cmdArgs[5];
-                //Console.WriteLine("Would you like to continue using job id: " + jobID);
-                //jobID = Console.ReadLine();
-                //Console.WriteLine("\n");
             }
 
             var iniPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory.ToString(), ".\\inputfile.ini");
@@ -93,6 +85,7 @@ namespace getLogsV15
             {
                 LogInfoToFile.LogMessageToFile("INFO: File.Exists for: " + iniPath + " is valid: Continue");
             }
+            
             else
             {
                 Console.WriteLine("######################################################################\n.\\inputfile.ini does not exist. \nThis file should be in the same directory as getLogs.exe\n\n\nCREATING INPUTFILE.INI with the default values below.\n\nFILE FORMAT:\n7zipPath=c:\\progra~1\\7-Zip\\7z.exe\nceLogPath=\\\\eng\\celogs\\\nlocalStagingDir=C:\\LogFiles\\\nextractDMP=false\n######################################################################\n\n");
@@ -153,7 +146,7 @@ namespace getLogsV15
             string excludeCSDB = "";
             string recheckShare = "y";
             string recheckFolder = "y";
-            //Console.WriteLine(stagePath);
+
             Console.WriteLine("Customer: " + cmdArgs[4] + "\nTicket Number: " + cmdArgs[2] + "\nCCID: " + cmdArgs[3]);
 
             int numlog = 0; //Used to display the number of logs in the folder.
@@ -174,8 +167,6 @@ namespace getLogsV15
             string sqlLiteDBFile = ".\\sqlLiteDBFile.db";
             string path2 = Directory.GetCurrentDirectory();
 
-            //Console.WriteLine("DB File is located in " + path2 + sqlLiteDBFile);
-            //Console.WriteLine(path2);
             if (!File.Exists(sqlLiteDBFile))
             {
                 SQLiteConnection.CreateFile(sqlLiteDBFile);
@@ -187,7 +178,6 @@ namespace getLogsV15
                 command.ExecuteNonQuery();
                 LogInfoToFile.LogMessageToFile("INFO: Database Created: " + path2 + "\\" + sqlLiteDBFile);
                 LogInfoToFile.LogMessageToFile("INFO: SQLite Query: " + sql);
-                //Console.WriteLine(path2);
             }
 
             //Open SQLite DB - Start
@@ -248,36 +238,28 @@ namespace getLogsV15
                     LogInfoToFile.LogMessageToFile("re-check log files selected");
                     goto recheckFullLogPath;
                 }
+
                 else if (recheckFolder == "c")
                 {
-                    //Console.WriteLine("Opening ftp...");
-                    //Windows.OpenExplorer("c:\test");
                     Process.Start("explorer", fullLogPath);
-                    //Console.ReadLine();
                     return;
                 }
+
                 else if (recheckFolder == "d")
                 {
-                    //Console.WriteLine("Opening ftp...");
-                    //Windows.OpenExplorer("c:\test");
                     Process.Start("explorer",extractTo);
-                    //Console.ReadLine();
                     return;
                 }
+
                 else if (recheckFolder == "e")
                 {
-                    //Console.WriteLine("Opening ftp...");
-                    //Windows.OpenExplorer("c:\test");
                     Process.Start("explorer", stagePath);
-                    //Console.ReadLine();
                     return;
                 }
                 else if (recheckFolder == "f")
                 {
                     Console.WriteLine("Opening ftp...");
-                    //Windows.OpenExplorer("c:\test");
                     Process.Start("explorer", ftpUrl + CCID);
-                    //Console.ReadLine();
                     return;
 
 
@@ -294,19 +276,12 @@ namespace getLogsV15
                 if((dir.Contains(".zip") || (dir.Contains(".cab") || (dir.Contains(".bak")))))
                 {
                     Console.WriteLine("\n##### Additional file found #######\n{0}",dir + " \n" + File.GetCreationTime(dir));
-                    //LogInfoToFile.LogMessageToFile("Found.001 file");
-                    //Console.WriteLine(dir);
                 }
-          
-
             }
-            //Console.WriteLine("");
+
             Console.ForegroundColor = defaultForeground;
 
 
-
-
-        //"*.001"
         recheck:
             if (Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).Length == 0)
             {
@@ -322,11 +297,10 @@ namespace getLogsV15
                 else if (recheckShare == "f")
                 {
                     Console.WriteLine("Opening ftp...");
-                    //Windows.OpenExplorer("c:\test");
                     Process.Start("explorer", ftpUrl + CCID);
-                    //Console.ReadLine();
                     return;
                 }
+
                 else if (recheckShare == "c")
                 {
                     Process.Start("explorer", fullLogPath);
@@ -357,15 +331,16 @@ namespace getLogsV15
                     }
 
                 }
+ 
                 else
                 {
                     LogInfoToFile.LogMessageToFile("INFO: No uploads found in" + fullLogPath);
                     LogInfoToFile.LogMessageToFile("ERROR: ################# EXITING CVGETLOGS #################");
-                    //Console.Read();
                     return;
                 }
 
             }
+
             else
             {
                 LogInfoToFile.LogMessageToFile("INFO: Uploads found in - " + fullLogPath + " Continuing");
@@ -405,18 +380,15 @@ namespace getLogsV15
                     {
                         LogInfoToFile.LogMessageToFile("INFO: stageFile7z exists " + stageFile7z);
                         Console.ForegroundColor = ConsoleColor.Green;
-
                         Console.Write("File:[{0}]", numlog++);
-                        //Console.ForegroundColor = defaultForeground;
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("\tSize: [{0} MB]", s1);
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("\tCreated on: {0}", File.GetCreationTime(dir));
                         Console.ForegroundColor = defaultForeground;
                         Console.WriteLine("\n {0}", dir);
-                        //Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
-
                     }
+
                     else
                     {
                         LogInfoToFile.LogMessageToFile("INFO: stageFile7z does not exist " + stageFile7z);
@@ -428,9 +400,6 @@ namespace getLogsV15
                         Console.WriteLine("File #: [{0}] \tFile Size: {2} MB\tCreated on: {3}\n {1}", numlog++, dir, s1, File.GetCreationTime(dir));
                         Console.ForegroundColor = defaultForeground;
                     }
-
-
-
 
                     try
                     {
