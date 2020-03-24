@@ -535,9 +535,8 @@ namespace getLogsV15
 
                 //This would replace the extraction happening in the foreach loop above. When working remotly the connection cannot handle the parallel operation.
 
-                //Parallel.ForEach(zipMultiPart, (currentFile) =>
+                //Parallel.ForEach(zipMultiPart, new ParallelOptions { MaxDegreeOfParallelism = 2 }, (currentFile) =>
                 //{
-                //    Console.WriteLine("Copying File " + currentFile);
                 //    string onlyFileName = Path.GetFileName(currentFile);
                 //    File.Copy(currentFile, Path.Combine(extractTo, onlyFileName), true);
                 //});
