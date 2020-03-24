@@ -30,8 +30,6 @@ namespace getLogsV15
             ConsoleColor defaultForeground = Console.ForegroundColor;
             Console.SetWindowSize(85, 45); //Resize window
             Console.SetBufferSize(85, 1024);
-
-
            
             Retry:
             string path = System.Environment.GetEnvironmentVariable("localappdata"); //Get folder %localappdata%
@@ -63,8 +61,6 @@ namespace getLogsV15
             }
 
             string[] cmdArgs = inputArgs.Split('/');
-
-            
 
             if (cmdArgs[5] == null)
             {
@@ -524,19 +520,17 @@ namespace getLogsV15
                 string multiPartZip7z = Path.GetFileNameWithoutExtension(multiPartZip001);
 
                 foreach (string dir in Directory.GetFileSystemEntries(fullLogPath, "*.*", SearchOption.AllDirectories).OrderByDescending(File.GetCreationTime))
-                    {
-
+                {
                         if (dir.Contains(multiPartZip7z))
-                    {
+                        {
                         zipMultiPart.Add(dir);
-                    }
+                        }
                 }
 
                 foreach (string dir in zipMultiPart)
                 {
                     string onlyFileName = Path.GetFileName(dir);
                     File.Copy(dir, Path.Combine(extractTo, onlyFileName), true);
-
                 }
 
                 //This would replace the extraction happening in the foreach loop above. When working remotly the connection cannot handle the parallel operation.
@@ -556,7 +550,6 @@ namespace getLogsV15
             {
                 File.Copy(zipFileList[numlog], Path.Combine(extractTo, parentZipFileExt), true);
             }
-            
 
             try
             {
@@ -624,13 +617,10 @@ namespace getLogsV15
                     Console.ReadLine();
                     Console.WriteLine("Cab files is not done downloading: Returning to log selection menu. Try again!");
                     LogInfoToFile.LogMessageToFile("INFO: Cab files is not done downloading: Returning to log selection menu. Try again!");
-                    //goto Retry;
                 }
-
 
                 int zfilecount2 = zipFileList2.Count;
                 Console.WriteLine("\nWorking on {0} parent .7z files", zfilecount2);
-
 
                 Parallel.ForEach(zipFileList2, (currentFile) =>
                 {
@@ -652,18 +642,11 @@ namespace getLogsV15
                     }
                 });
 
-
-
-
-
-
-
                 pro.FileName = cmdPath;
                 int zfilecount3 = zipFileList3.Count;
                 Console.WriteLine("Working on {0} parent .gz/tar files", zfilecount3);
                 Parallel.ForEach(zipFileList3, (currentFile) =>
                 {
-
                     string result;
                     result = Path.GetFileNameWithoutExtension(currentFile);
                     string sub7zipArg;
@@ -686,17 +669,12 @@ namespace getLogsV15
                             Thread.Sleep(DelayOnRetry);
                         }
                     }
-
                     LogInfoToFile.LogMessageToFile("DELETE " + currentFile);
                     LogInfoToFile.LogMessageToFile("INFO: cmd.exe " + pro.Arguments);
-
                 });
 
-
                 pro.FileName = zPath;
-
                 string[] dirs = Directory.GetDirectories(parentFilePath, "*", SearchOption.TopDirectoryOnly);
-                
 
                 foreach (string dir in dirs)
                 {
@@ -721,7 +699,6 @@ namespace getLogsV15
                 
                 Parallel.ForEach(zipFileList4, (currentFile) =>
                 {
-
                 string outputFolder;
                 outputFolder = Path.GetDirectoryName(currentFile);
                 pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder + "\\*");    // extracts the 7z file found in the foreach above.
@@ -735,13 +712,12 @@ namespace getLogsV15
                                 File.Delete(currentFile);
                                 break;
                         }
+
                         catch (IOException e) when(i <= NumberOfRetries)
                         {
                                 Thread.Sleep(DelayOnRetry);
                         }
                     }
-
-
                 });
 
                 int zfilecount5 = zipFileList5.Count;
@@ -749,7 +725,6 @@ namespace getLogsV15
 
                 Parallel.ForEach(zipFileList5, (currentFile) =>
                 {
-
                     string outputFolder;
                     outputFolder = Path.GetDirectoryName(currentFile);
                     pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", currentFile, outputFolder);    // extracts the 7z file found in the foreach above.
@@ -772,29 +747,22 @@ namespace getLogsV15
 
                 });
 
-
                 LogInfoToFile.LogMessageToFile("INFO: Opening folder " + parentFilePath);
                 Process.Start("explorer", parentFilePath);
                 LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
                 LogInfoToFile.LogMessageToFile("INFO: ################# EXITING CVGETLOGS #################");
-
                 return;
-
             }
 
             catch (Exception e)
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
-
-
             }
             finally { }
 
             LogInfoToFile.LogMessageToFile("Total run time: " + stopWatch.Elapsed.TotalSeconds);
             LogInfoToFile.LogMessageToFile("INFO: Done working with" + customerName + ". Goodbye!");
             Console.Read();
-
-
         }
     }
 }
